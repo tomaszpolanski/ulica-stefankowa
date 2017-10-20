@@ -2,6 +2,7 @@ name: ulicastefankowa
 description: A new Flutter project.
 
 dependencies:
+  rxdart: "^0.14.0+1"
   flutter:
     sdk: flutter
 
@@ -20,6 +21,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the Icons class.
   uses-material-design: true
+  assets:
+    - images/header.jpg
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
