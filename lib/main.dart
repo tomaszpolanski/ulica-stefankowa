@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
 
 const double _kFlexibleSpaceMaxHeight = 180.0;
 
@@ -43,12 +47,52 @@ class _MyHomePageState extends State<MyHomePage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<
       ScaffoldState>();
 
+  List<Post> _posts = new List();
+  StreamSubscription<List<Post>> _subscription;
 
-  List<Widget> buildItem() {
-    return _kTitleColors.map((color) =>
+  @override
+  void initState() {
+    super.initState();
+    _subscription = _fetch();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
+  }
+
+  StreamSubscription<List<Post>> _fetch() {
+    return new Observable.fromFuture(createHttpClient().get(
+        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl"))
+        .map((response) => JSON.decode(response.body))
+        .map((json) => json["results"].map(_parsePost).toList())
+        .listen((respo) =>
+        setState(() {
+          _posts = respo;
+        }));
+  }
+
+  Post _parsePost(dynamic post) {
+    var body = post["data"];
+    var image = body["image"]["url"];
+    var title = body["title"].first["text"];
+    var description = body["description"].first["text"];
+    return new Post(
+        title: title, imageUrl: image, description: description, text: "dsfsa");
+  }
+
+  List<Widget> buildItem(List<Post> posts) {
+    return posts.map((post) =>
     new Container(
-      height: 150.0,
-      color: color,
+      padding: const EdgeInsets.all(16.0),
+      child: new Stack(
+        alignment: Alignment.bottomLeft,
+        children: <Widget>[
+          new Image.network(post.imageUrl),
+          new Text(post.title, style: Theme.of(context).textTheme.title),
+        ],
+      ),
     )).toList();
   }
 
@@ -97,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         gradient: const LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          stops: const [.7,  1.0],
+                          stops: const [.7, 1.0],
                           colors: const <Color>[
                             const Color(0x00000000), const Color(0x60FF5722)],
                         ),
@@ -108,10 +152,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             new SliverList(
-                delegate: new SliverChildListDelegate(buildItem())
+                delegate: new SliverChildListDelegate(buildItem(_posts))
             ),
           ],
         )
     );
   }
+}
+
+class Post {
+  Post({this.title, this.imageUrl, this.description, this.text});
+
+  String title;
+  String imageUrl;
+  String description;
+  String text;
 }
