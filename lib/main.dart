@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
+import './PostPage.dart';
+import './Post.dart';
+
 const double _kFlexibleSpaceMaxHeight = 180.0;
 
 const List<Color> _kTitleColors = const <Color>[
@@ -78,20 +81,30 @@ class _MyHomePageState extends State<MyHomePage> {
     var image = body["image"]["url"];
     var title = body["title"].first["text"];
     var description = body["description"].first["text"];
+    var text = body["text"].map((it) => it["text"]).toList();
     return new Post(
-        title: title, imageUrl: image, description: description, text: "dsfsa");
+        title: title, imageUrl: image, description: description, text: text);
   }
 
   List<Widget> buildItem(List<Post> posts) {
     return posts.map((post) =>
     new Container(
       padding: const EdgeInsets.all(16.0),
-      child: new Stack(
-        alignment: Alignment.bottomLeft,
-        children: <Widget>[
-          new Image.network(post.imageUrl),
-          new Text(post.title, style: Theme.of(context).textTheme.title),
-        ],
+      child: new InkWell(
+        onTap: () =>
+            Navigator.of(context).push(new MaterialPageRoute(
+              builder: (_) => new PostPage(post: post),
+            )),
+        child: new Stack(
+          alignment: Alignment.bottomLeft,
+          children: <Widget>[
+            new Image.network(post.imageUrl),
+            new Text(post.title, style: Theme
+                .of(context)
+                .textTheme
+                .title),
+          ],
+        ),
       ),
     )).toList();
   }
@@ -160,11 +173,3 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Post {
-  Post({this.title, this.imageUrl, this.description, this.text});
-
-  String title;
-  String imageUrl;
-  String description;
-  String text;
-}
