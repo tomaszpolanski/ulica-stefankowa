@@ -18,20 +18,39 @@ const List<Color> _kTitleColors = const <Color>[
   const Color(0xff51ba50),
 ];
 
+const MaterialColor lightBlue = const MaterialColor(
+  _lightBluePrimaryValue,
+  const <int, Color>{
+    50: const Color(0xfff8fffe),
+    100: const Color(0xfff7fffd),
+    200: const Color(0xfff6fffc),
+    300: const Color(0xfff5fffb),
+    400: const Color(0xfff4fffA),
+    500: const Color(_lightBluePrimaryValue),
+    600: const Color(0xFFE1F5FE),
+    700: const Color(0xFFB3E5FC),
+    800: const Color(0xFF81D4FA),
+    900: const Color(0xFF4FC3F7)
+  },
+);
+
+const int _lightBluePrimaryValue = 0xfff3fef9;
+
+const String _name = 'UliCa SteFAnkOwA';
+
 void main() {
   runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
+      title: _name,
       theme: new ThemeData(
-        primarySwatch: Colors.deepOrange,
+        primarySwatch: lightBlue,
       ),
-      home: new MyHomePage(title: 'Ulica Stefankowa'),
+      home: new MyHomePage(title: _name),
     );
   }
 }
@@ -67,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl"))
+        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl#format=json"))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
         .listen((respo) =>
@@ -138,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
                 title: buildTitle(
-                    "Ulica Stefankowa", _kTitleColors),
+                    _name, _kTitleColors),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
