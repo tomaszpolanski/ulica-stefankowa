@@ -27,6 +27,9 @@ flutter:
     - family: Serif
       fonts:
         - asset: fonts/PT_Serif-Web-Regular.ttf
+    - family: Lobster
+      fonts:
+        - asset: fonts/Lobster-Regular.ttf
 
 
   # To add assets to your application, add an assets section, like this:

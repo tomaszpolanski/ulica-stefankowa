@@ -58,7 +58,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-
   final String title;
 
   @override
@@ -66,8 +65,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<
-      ScaffoldState>();
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      new GlobalKey<ScaffoldState>();
 
   List<Post> _posts = new List();
   StreamSubscription<List<Post>> _subscription;
@@ -86,13 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl#format=json"))
+            "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl#format=json"))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
-        .listen((respo) =>
-        setState(() {
-          _posts = respo;
-        }));
+        .listen((respo) => setState(() {
+              _posts = respo;
+            }));
   }
 
   Post _parsePost(dynamic post) {
@@ -106,33 +104,39 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> buildItem(List<Post> posts) {
-    return posts.map((post) =>
-    new Container(
-      padding: const EdgeInsets.all(16.0),
-      child: new InkWell(
-        onTap: () =>
-            Navigator.of(context).push(new MaterialPageRoute(
-              builder: (_) => new PostPage(post: post),
-            )),
-        child: new Stack(
-          alignment: Alignment.bottomLeft,
-          children: <Widget>[
-            new Image.network(post.imageUrl),
-            new Text(post.title, style: Theme
-                .of(context)
-                .textTheme
-                .title),
-          ],
-        ),
-      ),
-    )).toList();
+    return posts
+        .map((post) => new Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: new InkWell(
+                onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (_) => new PostPage(post: post),
+                    )),
+                child: new Card(
+                  child: new Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: <Widget>[
+                      new Image.network(post.imageUrl),
+                      new Container(
+                          padding: const EdgeInsets.all(16.0),
+                          child: new Text(post.title,
+                              style: new TextStyle(
+                                fontFamily: "Lobster",
+                                fontSize: 25.0,
+                              ))),
+                    ],
+                  ),
+                ),
+              ),
+            ))
+        .toList();
   }
 
   Widget buildTitle(String title, List<Color> colors) {
     var list = new List<Widget>();
     for (var i = 0; i < title.length; i++) {
       final letter = new String.fromCharCode(title.codeUnitAt(i));
-      list.add(new Text(letter,
+      list.add(new Text(
+        letter,
         style: new TextStyle(
           color: colors[i % colors.length],
         ),
@@ -142,7 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
       children: list,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: buildTitle(
-                    _name, _kTitleColors),
+                title: buildTitle(_name, _kTitleColors),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
@@ -175,7 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           end: Alignment.bottomCenter,
                           stops: const [.7, 1.0],
                           colors: const <Color>[
-                            const Color(0x00000000), const Color(0x60FF5722)],
+                            const Color(0x00000000),
+                            const Color(0x60FF5722)
+                          ],
                         ),
                       ),
                     ),
@@ -184,11 +188,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             new SliverList(
-                delegate: new SliverChildListDelegate(buildItem(_posts))
-            ),
+                delegate: new SliverChildListDelegate(buildItem(_posts))),
           ],
-        )
-    );
+        ));
   }
 }
-
