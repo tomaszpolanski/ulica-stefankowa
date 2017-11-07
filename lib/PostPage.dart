@@ -15,7 +15,7 @@ class PostPage extends StatefulWidget {
 
 class PostPageState extends State<PostPage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
-      new GlobalKey<ScaffoldState>();
+  new GlobalKey<ScaffoldState>();
   Post _post;
 
   PostPageState(Post post) {
@@ -42,13 +42,29 @@ class PostPageState extends State<PostPage> {
             new Image.network(_post.imageUrl),
             new Container(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: new Text(
-                _post.text.reduce((f, s) => "$f \n $s"),
-                style: new TextStyle(
-                    fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0),
+              child:
+              new RichText(
+                text: new TextSpan(
+                    children: _post.text.map((it) => it.spans.first)
+                        .map((it) =>
+                    new TextSpan(
+                        text: it.text,
+                        style: it.type == "em"
+                            ? Theme
+                            .of(context)
+                            .textTheme
+                            .body1
+                            .copyWith(fontStyle: FontStyle.italic)
+                            : Theme
+                            .of(context)
+                            .textTheme
+                            .body1),
+                    ).toList()
+                ),
               ),
             ),
           ],
-        ));
+        )
+    );
   }
 }

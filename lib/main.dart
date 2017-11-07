@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
-import './PostPage.dart';
+import './Paragraph.dart';
 import './Post.dart';
+import './PostPage.dart';
 
 const double _kFlexibleSpaceMaxHeight = 180.0;
 
@@ -66,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
-      new GlobalKey<ScaffoldState>();
+  new GlobalKey<ScaffoldState>();
 
   List<Post> _posts = new List();
   StreamSubscription<List<Post>> _subscription;
@@ -85,12 +86,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-            "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WezBGSIAANl4JSMl#format=json"))
+        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgIV_SoAALF016k6#format=json"))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
-        .listen((respo) => setState(() {
-              _posts = respo;
-            }));
+        .listen((respo) =>
+        setState(() {
+          _posts = respo;
+        }));
+  }
+
+  Paragraph _getParagraph(dynamic paragraph) {
+    String text =  paragraph["text"];
+    var spans = paragraph["spans"].map((it) =>
+    new Span(start: it["start"],
+        end: it["end"],
+        type: it["type"]))
+    .toList();
+    return new Paragraph(text: paragraph["text"], spans: _getSpan(spans, text).toList());
+  }
+
+  Iterable<ProperSpan> _getSpan(List<Span> spans, String text) sync* {
+    num start = 0;
+    for (var span in spans) {
+      if (span.start == start) {
+        yield new ProperSpan(text: text.substring(span.start, span.end) + "\n\n", type: span.type);
+        start = span.end + 1;
+      } else if (span.start != start) {
+        yield new ProperSpan(text: text.substring(start, span.start - 1) + "\n\n", type: "normal");
+        start = start + 1;
+        yield new ProperSpan(text: text.substring(start, span.end) + "\n\n", type: span.type);
+        start = span.end + 1;
+      }
+    }
+    if (start <= text.length - 1) {
+      yield new ProperSpan(text: text.substring(start) + "\n\n", type: "normal");
+    }
   }
 
   Post _parsePost(dynamic post) {
@@ -98,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var image = body["image"]["url"];
     var title = body["title"].first["text"];
     var description = body["description"].first["text"];
-    var text = body["text"].map((it) => it["text"]).toList();
+    var text = body["text"].map((it) => _getParagraph(it)).toList();
     return new Post(
         title: title, imageUrl: image, description: description, text: text);
   }
@@ -193,3 +223,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 }
+
+
