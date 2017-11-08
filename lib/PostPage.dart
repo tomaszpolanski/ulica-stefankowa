@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import './Post.dart';
 
 const double _kFlexibleSpaceMaxHeight = 200.0;
+const TextStyle _kBodyFont = const TextStyle(
+    fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0, color: Colors.black);
 
 class PostPage extends StatefulWidget {
   const PostPage({Post this.post, Key key}) : super(key: key);
@@ -18,6 +20,7 @@ class PostPageState extends State<PostPage> {
   new GlobalKey<ScaffoldState>();
   Post _post;
 
+
   PostPageState(Post post) {
     this._post = post;
   }
@@ -25,6 +28,18 @@ class PostPageState extends State<PostPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  TextStyle _getStyle(String type) {
+    switch (type) {
+      case "strong":
+        return _kBodyFont.copyWith(fontWeight: FontWeight.bold);
+      case "em":
+        return _kBodyFont.copyWith(fontStyle: FontStyle.italic);
+      case "normal":
+      default:
+        return _kBodyFont;
+    }
   }
 
   @override
@@ -44,21 +59,13 @@ class PostPageState extends State<PostPage> {
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child:
               new RichText(
+                textAlign: TextAlign.justify,
                 text: new TextSpan(
                     children: _post.text.map((it) => it.spans.first)
                         .map((it) =>
                     new TextSpan(
                         text: it.text,
-                        style: it.type == "em"
-                            ? Theme
-                            .of(context)
-                            .textTheme
-                            .body1
-                            .copyWith(fontStyle: FontStyle.italic)
-                            : Theme
-                            .of(context)
-                            .textTheme
-                            .body1),
+                        style: _getStyle(it.type))
                     ).toList()
                 ),
               ),

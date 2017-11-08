@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgIV_SoAALF016k6#format=json"))
+        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgNIeCoAAJ7H3PUi#format=json"))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
         .listen((respo) =>
