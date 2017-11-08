@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgNIeCoAAJ7H3PUi#format=json"))
+        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgNPzioAAADJ3RWO#format=json"))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
         .listen((respo) =>
@@ -110,16 +110,16 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var span in spans) {
       if (span.start == start) {
         yield new ProperSpan(text: text.substring(span.start, span.end) + "\n\n", type: span.type);
-        start = span.end + 1;
+        start = span.end;
       } else if (span.start != start) {
         yield new ProperSpan(text: text.substring(start, span.start - 1) + "\n\n", type: "normal");
-        start = start + 1;
+        start = span.start - 1;
         yield new ProperSpan(text: text.substring(start, span.end) + "\n\n", type: span.type);
-        start = span.end + 1;
+        start = span.end;
       }
     }
     if (start <= text.length - 1) {
-      yield new ProperSpan(text: text.substring(start) + "\n\n", type: "normal");
+      yield new ProperSpan(text: text.substring(start) + "\n", type: "normal");
     }
   }
 

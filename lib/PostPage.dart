@@ -61,12 +61,11 @@ class PostPageState extends State<PostPage> {
               new RichText(
                 textAlign: TextAlign.justify,
                 text: new TextSpan(
-                    children: _post.text.map((it) => it.spans.first)
-                        .map((it) =>
-                    new TextSpan(
-                        text: it.text,
-                        style: _getStyle(it.type))
-                    ).toList()
+                    children: _post.text.expand((it) => it.spans.map((span) => new TextSpan(
+                        text: span.text,
+                        style: _getStyle(span.type))
+                    ))
+                    .toList()
                 ),
               ),
             ),
