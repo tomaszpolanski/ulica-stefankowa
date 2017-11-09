@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:ulicastefankowa/PhotoHero.dart';
 
 import './Paragraph.dart';
 import './Post.dart';
@@ -101,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     new Span(start: it["start"],
         end: it["end"],
         type: it["type"]))
-    .toList();
+        .toList();
     return new Paragraph(text: paragraph["text"], spans: _getSpan(spans, text).toList());
   }
 
@@ -136,28 +137,30 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildItem(List<Post> posts) {
     return posts
         .map((post) => new Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: new InkWell(
-                onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (_) => new PostPage(post: post),
-                    )),
-                child: new Card(
-                  child: new Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: <Widget>[
-                      new Image.network(post.imageUrl),
-                      new Container(
-                          padding: const EdgeInsets.all(16.0),
-                          child: new Text(post.title,
-                              style: new TextStyle(
-                                fontFamily: "Lobster",
-                                fontSize: 25.0,
-                              ))),
-                    ],
-                  ),
-                ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: new InkWell(
+        onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+          builder: (_) => new PostPage(post: post),
+        )),
+        child: new Card(
+          child: new Stack(
+            alignment: Alignment.bottomLeft,
+            children: <Widget>[
+              new PhotoHero(
+                photo: post.imageUrl,
               ),
-            ))
+              new Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: new Text(post.title,
+                      style: new TextStyle(
+                        fontFamily: "Lobster",
+                        fontSize: 25.0,
+                      ))),
+            ],
+          ),
+        ),
+      ),
+    ))
         .toList();
   }
 
