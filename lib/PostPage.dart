@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
@@ -11,9 +12,17 @@ const TextStyle _kBodyFont = const TextStyle(
     fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
 
 class PostPage extends StatefulWidget {
-  const PostPage({this.post, Key key}) : super(key: key);
+  const PostPage({
+    Key key,
+    this.post,
+    this.useLightTheme,
+    @required this.onThemeChanged})
+      : assert(onThemeChanged != null),
+        super(key: key);
 
   final Post post;
+  final bool useLightTheme;
+  final ValueChanged<bool> onThemeChanged;
 
   @override
   _PostPageState createState() => new _PostPageState();
@@ -43,12 +52,19 @@ class _PostPageState extends State<PostPage> {
   TextStyle _getStyle(String type, TextStyle style) {
     switch (type) {
       case "strong":
-        return style.copyWith(fontWeight: FontWeight.bold, fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
+        return style.copyWith(fontWeight: FontWeight.bold,
+            fontFamily: "Serif",
+            fontSize: 20.0,
+            wordSpacing: 4.0);
       case "em":
-        return style.copyWith(fontStyle: FontStyle.italic, fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
+        return style.copyWith(fontStyle: FontStyle.italic,
+            fontFamily: "Serif",
+            fontSize: 20.0,
+            wordSpacing: 4.0);
       case "normal":
       default:
-        return style.copyWith(fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
+        return style.copyWith(
+            fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
     }
   }
 
@@ -85,11 +101,18 @@ class _PostPageState extends State<PostPage> {
       body: new CustomScrollView(
         slivers: <Widget>[
           new SliverAppBar(
-              floating: true,
-              title: buildTitle(widget.post.title, Theme
-                  .of(context)
-                  .textTheme
-                  .title)
+            floating: true,
+            title: buildTitle(widget.post.title, Theme
+                .of(context)
+                .textTheme
+                .title),
+            actions: <Widget>[
+              new IconButton(
+                  icon: const Icon(Icons.visibility),
+                  tooltip: 'Theme',
+                  onPressed: () => widget.onThemeChanged(!widget.useLightTheme) // _showShoppingCart
+              )
+            ],
           ),
           new SliverList(
             delegate: new SliverChildListDelegate(<Widget>[

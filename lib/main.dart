@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
@@ -41,7 +42,6 @@ final ThemeData _kGalleryDarkTheme = new ThemeData(
 );
 
 
-
 const int _lightBluePrimaryValue = 0xfff3fef9;
 
 const String _name = 'UliCa SteFAnkOwA';
@@ -52,21 +52,44 @@ void main() {
   runApp(new MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _useLightTheme = true;
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: _name,
-      theme: (false ? _kGalleryLightTheme : _kGalleryDarkTheme),
-      home: new MyHomePage(title: _name),
+      theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
+      home: new MyHomePage(
+          title: _name,
+          useLightTheme: _useLightTheme,
+          onThemeChanged: (bool value) {
+            setState(() {
+              _useLightTheme = value;
+            });
+          }),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({
+    Key key,
+    this.title,
+    this.useLightTheme,
+    @required this.onThemeChanged})
+      : assert(onThemeChanged != null),
+        super(key: key);
 
   final String title;
+  final bool useLightTheme;
+  final ValueChanged<bool> onThemeChanged;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -78,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Post> _posts = new List();
   StreamSubscription<List<Post>> _subscription;
+
 
   @override
   void initState() {
@@ -164,7 +188,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new InkWell(
         onTap: () =>
             Navigator.of(context).push(new MaterialPageRoute(
-              builder: (_) => new PostPage(post: post),
+              builder: (_) =>
+              new PostPage(
+                post: post,
+                useLightTheme: widget.useLightTheme,
+                onThemeChanged: widget.onThemeChanged),
             )),
         child: new Card(
           child: new Stack(
@@ -174,7 +202,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 photo: post.imageUrl,
               ),
               new Container(
-                  decoration: new BoxDecoration(color: Theme.of(context).backgroundColor.withAlpha(200)),
+                decoration: new BoxDecoration(color: Theme
+                    .of(context)
+                    .backgroundColor
+                    .withAlpha(200)),
                 padding: const EdgeInsets.all(16.0),
                 child: buildTitle(post.title, const TextStyle(
                   fontFamily: "Lobster",
@@ -202,10 +233,10 @@ class _MyHomePageState extends State<MyHomePage> {
               flexibleSpace: new FlexibleSpaceBar(
                 title: new Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: buildTitle(_name, Theme
-                    .of(context)
-                    .textTheme
-                    .title),
+                  child: buildTitle(_name, Theme
+                      .of(context)
+                      .textTheme
+                      .title),
                 ),
                 background: new Stack(
                   fit: StackFit.expand,
