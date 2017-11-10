@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
+import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 import './Paragraph.dart';
 import './Post.dart';
@@ -12,13 +13,6 @@ import './PostPage.dart';
 
 const double _kFlexibleSpaceMaxHeight = 180.0;
 
-const List<Color> _kTitleColors = const <Color>[
-  const Color(0xffef9c20),
-  const Color(0xff35c4d5),
-  const Color(0xff3c8bac),
-  const Color(0xffef9ecc),
-  const Color(0xff51ba50),
-];
 
 const MaterialColor lightBlue = const MaterialColor(
   _lightBluePrimaryValue,
@@ -39,6 +33,8 @@ const MaterialColor lightBlue = const MaterialColor(
 const int _lightBluePrimaryValue = 0xfff3fef9;
 
 const String _name = 'UliCa SteFAnkOwA';
+
+const String _kYesIKnow_willChange = "MC5XZ1hlYWlnQUFGb0stWmZr.77-9Vi1_Du-_ve-_ve-_ve-_vUkO77-977-9Ou-_ve-_ve-_vWPvv73vv73vv73vv73vv71777-9dSbvv71ube-_ve-_vQ";
 
 void main() {
   runApp(new MyApp());
@@ -87,7 +83,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription<List<Post>> _fetch() {
     return new Observable.fromFuture(createHttpClient().get(
-        "https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=WgNPzioAAADJ3RWO#format=json"))
+        """https://ulicastefankowa.prismic.io/api/v2""", headers: {
+      "accessToken": _kYesIKnow_willChange
+    }
+    )).map((it) => JSON.decode(it.body)["refs"])
+        .flatMap((it) =>
+    new Observable.fromFuture(createHttpClient().get(
+        """https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=${it
+            .first["ref"]}#format=json""", headers: {
+      "accessToken": _kYesIKnow_willChange
+    }
+    )))
         .map((response) => JSON.decode(response.body))
         .map((json) => json["results"].map(_parsePost).toList())
         .listen((respo) =>
@@ -97,25 +103,31 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Paragraph _getParagraph(dynamic paragraph) {
-    String text =  paragraph["text"];
+    String text = paragraph["text"];
     var spans = paragraph["spans"].map((it) =>
     new Span(start: it["start"],
         end: it["end"],
         type: it["type"]))
         .toList();
-    return new Paragraph(text: paragraph["text"], spans: _getSpan(spans, text).toList());
+    return new Paragraph(
+        text: paragraph["text"], spans: _getSpan(spans, text).toList());
   }
 
   Iterable<ProperSpan> _getSpan(List<Span> spans, String text) sync* {
     num start = 0;
     for (var span in spans) {
       if (span.start == start) {
-        yield new ProperSpan(text: text.substring(span.start, span.end) + "\n\n", type: span.type);
+        yield new ProperSpan(
+            text: text.substring(span.start, span.end) + "\n\n",
+            type: span.type);
         start = span.end;
       } else if (span.start != start) {
-        yield new ProperSpan(text: text.substring(start, span.start - 1) + "\n\n", type: "normal");
+        yield new ProperSpan(
+            text: text.substring(start, span.start - 1) + "\n\n",
+            type: "normal");
         start = span.start - 1;
-        yield new ProperSpan(text: text.substring(start, span.end) + "\n\n", type: span.type);
+        yield new ProperSpan(
+            text: text.substring(start, span.end) + "\n\n", type: span.type);
         start = span.end;
       }
     }
@@ -136,12 +148,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> buildItem(List<Post> posts) {
     return posts
-        .map((post) => new Container(
+        .map((post) =>
+    new Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: new InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) => new PostPage(post: post),
-        )),
+        onTap: () =>
+            Navigator.of(context).push(new MaterialPageRoute(
+              builder: (_) => new PostPage(post: post),
+            )),
         child: new Card(
           child: new Stack(
             alignment: Alignment.bottomLeft,
@@ -150,34 +164,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 photo: post.imageUrl,
               ),
               new Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: new Text(post.title,
-                      style: new TextStyle(
-                        fontFamily: "Lobster",
-                        fontSize: 25.0,
-                      ))),
+                padding: const EdgeInsets.all(16.0),
+                child: buildTitle(post.title, const TextStyle(
+                  fontFamily: "Lobster",
+                  fontSize: 25.0,
+                )),
+              ),
             ],
           ),
         ),
       ),
     ))
         .toList();
-  }
-
-  Widget buildTitle(String title, List<Color> colors) {
-    var list = new List<Widget>();
-    for (var i = 0; i < title.length; i++) {
-      final letter = new String.fromCharCode(title.codeUnitAt(i));
-      list.add(new Text(
-        letter,
-        style: new TextStyle(
-          color: colors[i % colors.length],
-        ),
-      ));
-    }
-    return new Row(
-      children: list,
-    );
   }
 
   @override
@@ -192,7 +190,10 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: buildTitle(_name, _kTitleColors),
+                title: buildTitle(_name, Theme
+                    .of(context)
+                    .textTheme
+                    .title),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[

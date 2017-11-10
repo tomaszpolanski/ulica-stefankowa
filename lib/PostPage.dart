@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
+import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 import './Post.dart';
 
@@ -31,7 +32,10 @@ class PostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text(post.title),
+          title: buildTitle(post.title, Theme
+              .of(context)
+              .textTheme
+              .title),
         ),
         key: _scaffoldKey,
         backgroundColor: Colors.white,
