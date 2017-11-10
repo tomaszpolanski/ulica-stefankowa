@@ -17,8 +17,9 @@ class PhotoHero extends StatelessWidget {
           color: Colors.transparent,
           child: new InkWell(
             onTap: onTap,
-            child: new Image.network(
-              photo,
+            child: new FadeInImage.assetNetwork(
+              image: photo,
+              placeholder: 'images/header.jpg',
               fit: BoxFit.contain,
             ),
           ),
