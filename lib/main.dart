@@ -174,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 photo: post.imageUrl,
               ),
               new Container(
+                  decoration: new BoxDecoration(color: Theme.of(context).backgroundColor.withAlpha(200)),
                 padding: const EdgeInsets.all(16.0),
                 child: buildTitle(post.title, const TextStyle(
                   fontFamily: "Lobster",
@@ -199,10 +200,13 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: buildTitle(_name, Theme
+                title: new Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: buildTitle(_name, Theme
                     .of(context)
                     .textTheme
                     .title),
+                ),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
@@ -210,21 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       'images/header.jpg',
                       fit: BoxFit.cover,
                       height: _kFlexibleSpaceMaxHeight,
-                    ),
-                    // This gradient ensures that the toolbar icons are distinct
-                    // against the background image.
-                    const DecoratedBox(
-                      decoration: const BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: const [.7, 1.0],
-                          colors: const <Color>[
-                            const Color(0x00000000),
-                            const Color(0x60FF5722)
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
