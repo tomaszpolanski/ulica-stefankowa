@@ -1,3 +1,3 @@
 # Ulica Stefankowa
 
-A gift for my sister and app to learn Flutter
+A gift for my sister and an app to learn Flutter
