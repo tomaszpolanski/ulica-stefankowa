@@ -8,7 +8,7 @@ import './Post.dart';
 
 const double _kFlexibleSpaceMaxHeight = 200.0;
 const TextStyle _kBodyFont = const TextStyle(
-    fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0, color: Colors.black);
+    fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
 
 class PostPage extends StatefulWidget {
   const PostPage({this.post, Key key}) : super(key: key);
@@ -40,15 +40,15 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
-  TextStyle _getStyle(String type) {
+  TextStyle _getStyle(String type, TextStyle style) {
     switch (type) {
       case "strong":
-        return _kBodyFont.copyWith(fontWeight: FontWeight.bold);
+        return style.copyWith(fontWeight: FontWeight.bold, fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
       case "em":
-        return _kBodyFont.copyWith(fontStyle: FontStyle.italic);
+        return style.copyWith(fontStyle: FontStyle.italic, fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
       case "normal":
       default:
-        return _kBodyFont;
+        return style.copyWith(fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
     }
   }
 
@@ -57,7 +57,10 @@ class _PostPageState extends State<PostPage> {
         it.spans.map((span) =>
         new TextSpan(
             text: span.text,
-            style: _getStyle(span.type))
+            style: _getStyle(span.type, Theme
+                .of(context)
+                .textTheme
+                .title))
         ));
   }
 
@@ -79,7 +82,6 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
       body: new CustomScrollView(
         slivers: <Widget>[
           new SliverAppBar(

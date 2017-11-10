@@ -30,6 +30,18 @@ const MaterialColor lightBlue = const MaterialColor(
   },
 );
 
+final ThemeData _kGalleryLightTheme = new ThemeData(
+  brightness: Brightness.light,
+  primarySwatch: lightBlue,
+);
+
+final ThemeData _kGalleryDarkTheme = new ThemeData(
+  brightness: Brightness.dark,
+  primarySwatch: lightBlue,
+);
+
+
+
 const int _lightBluePrimaryValue = 0xfff3fef9;
 
 const String _name = 'UliCa SteFAnkOwA';
@@ -45,9 +57,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: _name,
-      theme: new ThemeData(
-        primarySwatch: lightBlue,
-      ),
+      theme: (false ? _kGalleryLightTheme : _kGalleryDarkTheme),
       home: new MyHomePage(title: _name),
     );
   }
@@ -182,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.white,
         body: new CustomScrollView(
           slivers: <Widget>[
             new SliverAppBar(
