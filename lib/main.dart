@@ -190,9 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.of(context).push(new MaterialPageRoute(
               builder: (_) =>
               new PostPage(
-                post: post,
-                useLightTheme: widget.useLightTheme,
-                onThemeChanged: widget.onThemeChanged),
+                  post: post,
+                  useLightTheme: widget.useLightTheme,
+                  onThemeChanged: widget.onThemeChanged),
             )),
         child: new Card(
           child: new Stack(
@@ -231,13 +231,10 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: new Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: buildTitle(_name, Theme
-                      .of(context)
-                      .textTheme
-                      .title),
-                ),
+                title: buildTitle(_name, Theme
+                    .of(context)
+                    .textTheme
+                    .title),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
