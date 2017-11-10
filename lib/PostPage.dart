@@ -52,6 +52,29 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
+  Iterable<TextSpan> _getText() {
+    return widget.post.text.expand((it) =>
+        it.spans.map((span) =>
+        new TextSpan(
+            text: span.text,
+            style: _getStyle(span.type))
+        ));
+  }
+
+  Widget _buildParagraphs(Iterable<TextSpan> spans) {
+    return new Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: new RichText(
+        textAlign: TextAlign.justify,
+        text: new TextSpan(
+            children: spans
+                .toList()
+        ),
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -68,29 +91,18 @@ class _PostPageState extends State<PostPage> {
           ),
           new SliverList(
             delegate: new SliverChildListDelegate(<Widget>[
-              new PhotoHero(
-                photo: widget.post.imageUrl,
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              _showText ? new Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 10.0),
-                child:
-                new RichText(
-                  textAlign: TextAlign.justify,
-                  text: new TextSpan(
-                      children: widget.post.text.expand((it) =>
-                          it.spans.map((span) =>
-                          new TextSpan(
-                              text: span.text,
-                              style: _getStyle(span.type))
-                          ))
-                          .toList()
-                  ),
+              new Container(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: new PhotoHero(
+                  photo: widget.post.imageUrl,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-              )
+              ),
+              _buildParagraphs(_getText().take(3)),
+              _showText
+                  ? _buildParagraphs(_getText().skip(3))
                   : new Container(),
             ],
             ),
