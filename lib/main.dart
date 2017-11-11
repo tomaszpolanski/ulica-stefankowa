@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:ulicastefankowa/MainDrawer.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
@@ -14,35 +15,16 @@ import './PostPage.dart';
 
 const double _kFlexibleSpaceMaxHeight = 180.0;
 
-
-const MaterialColor lightBlue = const MaterialColor(
-  _lightBluePrimaryValue,
-  const <int, Color>{
-    50: const Color(0xfff8fffe),
-    100: const Color(0xfff7fffd),
-    200: const Color(0xfff6fffc),
-    300: const Color(0xfff5fffb),
-    400: const Color(0xfff4fffA),
-    500: const Color(_lightBluePrimaryValue),
-    600: const Color(0xFFE1F5FE),
-    700: const Color(0xFFB3E5FC),
-    800: const Color(0xFF81D4FA),
-    900: const Color(0xFF4FC3F7)
-  },
-);
-
 final ThemeData _kGalleryLightTheme = new ThemeData(
   brightness: Brightness.light,
-  primarySwatch: lightBlue,
+  primarySwatch: Colors.orange,
+  primaryColor: Colors.white,
 );
 
 final ThemeData _kGalleryDarkTheme = new ThemeData(
   brightness: Brightness.dark,
-  primarySwatch: lightBlue,
+  primarySwatch: Colors.orange,
 );
-
-
-const int _lightBluePrimaryValue = 0xfff3fef9;
 
 const String _name = 'UliCa SteFAnkOwA';
 
@@ -224,6 +206,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
+        drawer: new MainDrawer(
+          title: widget.title,
+          useLightTheme: widget.useLightTheme,
+          onThemeChanged: widget.onThemeChanged,
+//          timeDilation: widget.timeDilation,
+          onTimeDilationChanged: (double value) {
+
+          },
+//          textScaleFactor: widget.textScaleFactor,
+//          onTextScaleFactorChanged: widget.onTextScaleFactorChanged,
+//          showPerformanceOverlay: widget.showPerformanceOverlay,
+//          onShowPerformanceOverlayChanged: widget.onShowPerformanceOverlayChanged,
+//          checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
+//          onCheckerboardRasterCacheImagesChanged: widget.onCheckerboardRasterCacheImagesChanged,
+//          checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
+//          onCheckerboardOffscreenLayersChanged: widget.onCheckerboardOffscreenLayersChanged,
+//          onPlatformChanged: widget.onPlatformChanged,
+//          onSendFeedback: widget.onSendFeedback,
+        ),
         body: new CustomScrollView(
           slivers: <Widget>[
             new SliverAppBar(
