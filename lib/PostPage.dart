@@ -8,21 +8,22 @@ import 'package:ulicastefankowa/utlis/TextUtils.dart';
 import './Post.dart';
 
 const double _kFlexibleSpaceMaxHeight = 200.0;
-const TextStyle _kBodyFont = const TextStyle(
-    fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
 
 class PostPage extends StatefulWidget {
   const PostPage({
     Key key,
     this.post,
     this.useLightTheme,
-    @required this.onThemeChanged})
+    @required this.onThemeChanged,
+    this.textScale})
       : assert(onThemeChanged != null),
         super(key: key);
 
   final Post post;
   final bool useLightTheme;
   final ValueChanged<bool> onThemeChanged;
+
+  final double textScale;
 
   @override
   _PostPageState createState() => new _PostPageState();
@@ -54,17 +55,15 @@ class _PostPageState extends State<PostPage> {
       case "strong":
         return style.copyWith(fontWeight: FontWeight.bold,
             fontFamily: "Serif",
-            fontSize: 20.0,
             wordSpacing: 4.0);
       case "em":
         return style.copyWith(fontStyle: FontStyle.italic,
             fontFamily: "Serif",
-            fontSize: 20.0,
             wordSpacing: 4.0);
       case "normal":
       default:
         return style.copyWith(
-            fontFamily: "Serif", fontSize: 20.0, wordSpacing: 4.0);
+            fontFamily: "Serif", wordSpacing: 4.0);
     }
   }
 
@@ -76,7 +75,7 @@ class _PostPageState extends State<PostPage> {
             style: _getStyle(span.type, Theme
                 .of(context)
                 .textTheme
-                .title))
+                .title.copyWith(fontSize: widget.textScale)))
         ));
   }
 

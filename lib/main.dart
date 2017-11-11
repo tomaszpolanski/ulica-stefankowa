@@ -84,6 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Post> _posts = new List();
   StreamSubscription<List<Post>> _subscription;
 
+  double _textScaleFactor = 20.0;
+
 
   @override
   void initState() {
@@ -174,7 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
               new PostPage(
                   post: post,
                   useLightTheme: widget.useLightTheme,
-                  onThemeChanged: widget.onThemeChanged),
+                  onThemeChanged: widget.onThemeChanged,
+                  textScale: _textScaleFactor),
             )),
         child: new Card(
           child: new Stack(
@@ -214,8 +217,12 @@ class _MyHomePageState extends State<MyHomePage> {
           onTimeDilationChanged: (double value) {
 
           },
-//          textScaleFactor: widget.textScaleFactor,
-//          onTextScaleFactorChanged: widget.onTextScaleFactorChanged,
+            textScaleFactor: _textScaleFactor,
+          onTextScaleFactorChanged:  (double value) {
+            setState(() {
+              _textScaleFactor = value;
+            });
+          },
 //          showPerformanceOverlay: widget.showPerformanceOverlay,
 //          onShowPerformanceOverlayChanged: widget.onShowPerformanceOverlayChanged,
 //          checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,

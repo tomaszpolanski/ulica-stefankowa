@@ -2,9 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-
-import 'dart:math' as math;
-
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 
@@ -155,9 +152,31 @@ class MainDrawer extends StatelessWidget {
       lightThemeItem,
       const Divider(),
       const Divider(),
+      new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          new Text('Post text size',
+              textAlign: TextAlign.center,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .title
+                  .copyWith(fontFamily: "Serif",
+                  wordSpacing: 4.0,
+                  fontSize: textScaleFactor)),
+          new Slider(
+              value: textScaleFactor,
+              min: 10.0,
+              max: 40.0,
+              label: '${textScaleFactor.round()}',
+              thumbOpenAtMin: true,
+              onChanged: onTextScaleFactorChanged
+          ),
+
+        ],
+      ),
     ];
 
-    allDrawerItems.addAll(textSizeItems);
 
     allDrawerItems
       ..addAll(<Widget>[
