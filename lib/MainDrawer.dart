@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -62,29 +64,9 @@ class MainDrawer extends StatelessWidget {
 
     final Widget lightThemeItem =
     new SwitchListTile(
-        title: const Text("Use Dark theme"),
+        title: const Text("Use Light theme"),
         value: useLightTheme,
         onChanged: onThemeChanged);
-
-
-    final List<Widget> textSizeItems = <Widget>[];
-    final Map<double, String> textSizes = <double, String>{
-      null: 'System Default',
-      0.8: 'Small',
-      1.0: 'Normal',
-      1.3: 'Large',
-      2.0: 'Huge',
-    };
-    for (double size in textSizes.keys) {
-      textSizeItems.add(new RadioListTile<double>(
-        secondary: const Icon(Icons.text_fields),
-        title: new Text(textSizes[size]),
-        value: size,
-        groupValue: textScaleFactor,
-        onChanged: onTextScaleFactorChanged,
-        selected: textScaleFactor == size,
-      ));
-    }
 
     final Widget animateSlowlyItem = new CheckboxListTile(
       title: const Text('Animate Slowly'),
@@ -101,7 +83,7 @@ class MainDrawer extends StatelessWidget {
         icon: const FlutterLogo(),
         applicationVersion: 'April 2017 Preview',
         applicationIcon: const FlutterLogo(),
-        applicationLegalese: '© 2017 The Chromium Authors',
+        applicationLegalese: '© 2017 Tomek & Paweł Polańscy',
         aboutBoxChildren: <Widget>[
           new Padding(
               padding: const EdgeInsets.only(top: 24.0),
@@ -110,15 +92,11 @@ class MainDrawer extends StatelessWidget {
                       children: <TextSpan>[
                         new TextSpan(
                             style: aboutTextStyle,
-                            text: 'Flutter is an early-stage, open-source project to help '
-                                'developers build high-performance, high-fidelity, mobile '
-                                'apps for iOS and Android from a single codebase. This '
-                                "gallery is a preview of Flutter's many widgets, behaviors, "
-                                'animations, layouts, and more. Learn more about Flutter at '
+                            text: 'TODO add description \n'
                         ),
                         new LinkTextSpan(
                             style: linkStyle,
-                            url: 'https://flutter.io'
+                            url: 'http://ulicastefankowa.pl'
                         ),
                         new TextSpan(
                             style: aboutTextStyle,
@@ -126,8 +104,8 @@ class MainDrawer extends StatelessWidget {
                         ),
                         new LinkTextSpan(
                             style: linkStyle,
-                            url: 'https://goo.gl/iv1p4G',
-                            text: 'flutter github repo'
+                            url: 'https://goo.gl/cYD8Dq',
+                            text: 'Ulicas Stefankowa github repo'
                         ),
                         new TextSpan(
                             style: aboutTextStyle,
@@ -176,7 +154,6 @@ class MainDrawer extends StatelessWidget {
         ],
       ),
     ];
-
 
     allDrawerItems
       ..addAll(<Widget>[
@@ -251,7 +228,7 @@ class LinkTextSpan extends TextSpan {
       text: text ?? url,
       recognizer: new TapGestureRecognizer()
         ..onTap = () {
-          //launch(url);
+          launch(url);
         }
   );
 }
