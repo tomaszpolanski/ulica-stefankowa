@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:ulicastefankowa/MainDrawer.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
+import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 import './Paragraph.dart';
@@ -49,6 +47,7 @@ class _MyAppState extends State<MyApp> {
       title: _name,
       theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
       home: new MyHomePage(
+          prismic: new Prismic(),
           title: _name,
           useLightTheme: _useLightTheme,
           onThemeChanged: (bool value) {
@@ -63,11 +62,15 @@ class _MyAppState extends State<MyApp> {
 class MyHomePage extends StatefulWidget {
   MyHomePage({
     Key key,
+    @required this.prismic,
     this.title,
     this.useLightTheme,
     @required this.onThemeChanged})
-      : assert(onThemeChanged != null),
+      : assert(prismic != null),
+        assert(onThemeChanged != null),
         super(key: key);
+
+  final Prismic prismic;
 
   final String title;
   final bool useLightTheme;
@@ -100,19 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   StreamSubscription<List<Post>> _fetch() {
-    return new Observable.fromFuture(createHttpClient().get(
-        """https://ulicastefankowa.prismic.io/api/v2""", headers: {
-      "accessToken": _kYesIKnow_willChange
-    }
-    )).map((it) => JSON.decode(it.body)["refs"])
-        .flatMap((it) =>
-    new Observable.fromFuture(createHttpClient().get(
-        """https://ulicastefankowa.prismic.io/api/v2/documents/search?ref=${it
-            .first["ref"]}#format=json""", headers: {
-      "accessToken": _kYesIKnow_willChange
-    }
-    )))
-        .map((response) => JSON.decode(response.body))
+    return widget.prismic.getPosts()
         .map((json) => json["results"].map(_parsePost).toList())
         .listen((respo) =>
         setState(() {
@@ -217,8 +208,8 @@ class _MyHomePageState extends State<MyHomePage> {
           onTimeDilationChanged: (double value) {
 
           },
-            textScaleFactor: _textScaleFactor,
-          onTextScaleFactorChanged:  (double value) {
+          textScaleFactor: _textScaleFactor,
+          onTextScaleFactorChanged: (double value) {
             setState(() {
               _textScaleFactor = value;
             });
