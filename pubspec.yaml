@@ -24,6 +24,7 @@ flutter:
   uses-material-design: true
   assets:
     - images/header.jpg
+    - images/logo.png
   fonts:
     - family: Serif
       fonts:

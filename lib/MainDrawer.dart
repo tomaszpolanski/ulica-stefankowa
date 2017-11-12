@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -80,9 +79,14 @@ class MainDrawer extends StatelessWidget {
 
 
     final Widget aboutItem = new AboutListTile(
-        icon: const FlutterLogo(),
-        applicationVersion: 'April 2017 Preview',
-        applicationIcon: const FlutterLogo(),
+        icon: new Image.asset(
+            'images/logo.png',
+            fit: BoxFit.cover),
+        applicationVersion: '2017 Preview',
+        applicationIcon: new Image.asset(
+            'images/logo.png',
+            height: 100.0,
+            fit: BoxFit.cover),
         applicationLegalese: '© 2017 Tomek & Paweł Polańscy',
         aboutBoxChildren: <Widget>[
           new Padding(
