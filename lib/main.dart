@@ -127,20 +127,20 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var span in spans) {
       if (span.start == start) {
         yield new ProperSpan(
-            text: text.substring(span.start, span.end) + "\n\n",
+            text: text.substring(span.start, span.end),
             type: span.type);
         start = span.end;
       } else if (span.start != start) {
         yield new ProperSpan(
-            text: text.substring(start, span.start - 1) + "\n\n",
+            text: text.substring(start, span.start - 1),
             type: "normal");
         start = span.start - 1;
         yield new ProperSpan(
-            text: text.substring(start, span.end) + "\n\n", type: span.type);
+            text: text.substring(start, span.end), type: span.type);
         start = span.end;
       }
     }
-    if (start <= text.length - 1) {
+    if (start <= text.length) {
       yield new ProperSpan(text: text.substring(start) + "\n", type: "normal");
     }
   }
