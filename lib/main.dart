@@ -221,8 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
               new Container(
                 decoration: new BoxDecoration(color: Theme
                     .of(context)
-                    .backgroundColor
-                    .withAlpha(200)),
+                    .backgroundColor),
                 padding: const EdgeInsets.all(16.0),
                 child: buildTitle(post.title, const TextStyle(
                   fontFamily: "Lobster",
