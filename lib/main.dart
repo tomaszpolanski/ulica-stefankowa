@@ -6,6 +6,7 @@ import 'package:ulicastefankowa/MainDrawer.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 
 import './Paragraph.dart';
 import './Post.dart';
@@ -40,6 +41,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _useLightTheme = true;
+  double _timeDilation = 1.0;
+  Timer _timeDilationTimer;
+
+  @override
+  void initState() {
+    _timeDilation = timeDilation;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timeDilationTimer?.cancel();
+    _timeDilationTimer = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +70,26 @@ class _MyAppState extends State<MyApp> {
             setState(() {
               _useLightTheme = value;
             });
-          }),
+          },
+        timeDilation: _timeDilation,
+        onTimeDilationChanged: (double value) {
+          setState(() {
+            _timeDilationTimer?.cancel();
+            _timeDilationTimer = null;
+            _timeDilation = value;
+            if (_timeDilation > 1.0) {
+              // We delay the time dilation change long enough that the user can see
+              // that the checkbox in the drawer has started reacting, then we slam
+              // on the brakes so that they see that the time is in fact now dilated.
+              _timeDilationTimer = new Timer(const Duration(milliseconds: 150), () {
+                timeDilation = _timeDilation;
+              });
+            } else {
+              timeDilation = _timeDilation;
+            }
+          });
+        },
+      ),
     );
   }
 }
@@ -65,9 +100,12 @@ class MyHomePage extends StatefulWidget {
     @required this.prismic,
     this.title,
     this.useLightTheme,
-    @required this.onThemeChanged})
+    @required this.onThemeChanged,
+    this.timeDilation,
+    this.onTimeDilationChanged,})
       : assert(prismic != null),
         assert(onThemeChanged != null),
+        assert(onTimeDilationChanged != null),
         super(key: key);
 
   final Prismic prismic;
@@ -75,6 +113,9 @@ class MyHomePage extends StatefulWidget {
   final String title;
   final bool useLightTheme;
   final ValueChanged<bool> onThemeChanged;
+
+  final double timeDilation;
+  final ValueChanged<double> onTimeDilationChanged;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -204,10 +245,8 @@ class _MyHomePageState extends State<MyHomePage> {
           title: widget.title,
           useLightTheme: widget.useLightTheme,
           onThemeChanged: widget.onThemeChanged,
-//          timeDilation: widget.timeDilation,
-          onTimeDilationChanged: (double value) {
-
-          },
+          timeDilation: widget.timeDilation,
+          onTimeDilationChanged: widget.onTimeDilationChanged,
           textScaleFactor: _textScaleFactor,
           onTextScaleFactorChanged: (double value) {
             setState(() {
