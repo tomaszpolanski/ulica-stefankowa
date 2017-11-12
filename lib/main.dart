@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Paragraph _getParagraph(dynamic paragraph) {
-    String text = paragraph["text"];
+    String text = paragraph["text"] + "\n";
     var spans = paragraph["spans"].map((it) =>
     new Span(start: it["start"],
         end: it["end"],
