@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/MainDrawer.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
+import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 
 import './Paragraph.dart';
 import './Post.dart';
@@ -24,8 +26,6 @@ final ThemeData _kGalleryDarkTheme = new ThemeData(
   brightness: Brightness.dark,
   primarySwatch: Colors.orange,
 );
-
-const String _name = 'UliCa SteFAnkOwA';
 
 const String _kYesIKnow_willChange = "MC5XZ1hlYWlnQUFGb0stWmZr.77-9Vi1_Du-_ve-_ve-_ve-_vUkO77-977-9Ou-_ve-_ve-_vWPvv73vv73vv73vv73vv71777-9dSbvv71ube-_ve-_vQ";
 
@@ -60,11 +60,19 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: _name,
+      onGenerateTitle: (context) => CustomLocalizations.of(context).title,
+      localizationsDelegates: [
+        const CustomLocalizationsDelegate(),
+        PolishMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('pl', ''),
+      ],
       theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
       home: new MyHomePage(
           prismic: new Prismic(),
-          title: _name,
           useLightTheme: _useLightTheme,
           onThemeChanged: (bool value) {
             setState(() {
@@ -98,7 +106,6 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({
     Key key,
     @required this.prismic,
-    this.title,
     this.useLightTheme,
     @required this.onThemeChanged,
     this.timeDilation,
@@ -110,7 +117,6 @@ class MyHomePage extends StatefulWidget {
 
   final Prismic prismic;
 
-  final String title;
   final bool useLightTheme;
   final ValueChanged<bool> onThemeChanged;
 
@@ -241,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: new MainDrawer(
-          title: widget.title,
+          title: CustomLocalizations.of(context).title,
           useLightTheme: widget.useLightTheme,
           onThemeChanged: widget.onThemeChanged,
           timeDilation: widget.timeDilation,
@@ -268,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: buildTitle(_name, Theme
+                title: buildTitle(CustomLocalizations.of(context).title, Theme
                     .of(context)
                     .textTheme
                     .title),

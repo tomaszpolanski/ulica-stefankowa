@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -63,12 +64,12 @@ class MainDrawer extends StatelessWidget {
 
     final Widget lightThemeItem =
     new SwitchListTile(
-        title: const Text("Use Light theme"),
+        title: new Text(CustomLocalizations.of(context).useLightTheme),
         value: useLightTheme,
         onChanged: onThemeChanged);
 
     final Widget animateSlowlyItem = new CheckboxListTile(
-      title: const Text('Animate Slowly'),
+      title: new Text(CustomLocalizations.of(context).slowAnimations),
       value: timeDilation != 1.0,
       onChanged: (bool value) {
         onTimeDilationChanged(value ? 20.0 : 1.0);
@@ -82,12 +83,12 @@ class MainDrawer extends StatelessWidget {
         icon: new Image.asset(
             'images/logo.png',
             fit: BoxFit.cover),
-        applicationVersion: '2017 Preview',
+        applicationVersion: CustomLocalizations.of(context).appVersion,
         applicationIcon: new Image.asset(
             'images/logo.png',
             height: 100.0,
             fit: BoxFit.cover),
-        applicationLegalese: '© 2017 Tomek & Paweł Polańscy',
+        applicationLegalese: CustomLocalizations.of(context).appCopy,
         aboutBoxChildren: <Widget>[
           new Padding(
               padding: const EdgeInsets.only(top: 24.0),
@@ -96,7 +97,7 @@ class MainDrawer extends StatelessWidget {
                       children: <TextSpan>[
                         new TextSpan(
                             style: aboutTextStyle,
-                            text: 'TODO add description \n'
+                            text: CustomLocalizations.of(context).appDescription
                         ),
                         new LinkTextSpan(
                             style: linkStyle,
@@ -104,12 +105,12 @@ class MainDrawer extends StatelessWidget {
                         ),
                         new TextSpan(
                             style: aboutTextStyle,
-                            text: '.\n\nTo see the source code for this app, please visit the '
+                            text: CustomLocalizations.of(context).appSourceCode
                         ),
                         new LinkTextSpan(
                             style: linkStyle,
                             url: 'https://goo.gl/cYD8Dq',
-                            text: 'Ulicas Stefankowa github repo'
+                            text: CustomLocalizations.of(context).appRepoLink
                         ),
                         new TextSpan(
                             style: aboutTextStyle,
@@ -137,7 +138,7 @@ class MainDrawer extends StatelessWidget {
       new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          new Text('Post text size',
+          new Text(CustomLocalizations.of(context).postFontSize,
               textAlign: TextAlign.center,
               style: Theme
                   .of(context)
