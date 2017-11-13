@@ -30,16 +30,27 @@ class PostPage extends StatefulWidget {
 
 }
 
-class _PostPageState extends State<PostPage> {
+class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   static final GlobalKey<ScaffoldState> _scaffoldKey =
   new GlobalKey<ScaffoldState>();
   bool _showText = false;
+  AnimationController _controller;
+  Animation<double> _drawerContentsOpacity;
 
   @override
   void initState() {
     super.initState();
+    _controller = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _drawerContentsOpacity = new CurvedAnimation(
+      parent: _controller,
+      curve: Curves.linear,
+    );
     _delayText();
+    _controller.forward();
   }
 
   Future _delayText() async {
@@ -75,7 +86,8 @@ class _PostPageState extends State<PostPage> {
             style: _getStyle(span.type, Theme
                 .of(context)
                 .textTheme
-                .title.copyWith(fontSize: widget.textScale)))
+                .title
+                .copyWith(fontSize: widget.textScale)))
         ));
   }
 
@@ -109,7 +121,7 @@ class _PostPageState extends State<PostPage> {
               new IconButton(
                   icon: const Icon(Icons.visibility),
                   tooltip: 'Theme',
-                  onPressed: () => widget.onThemeChanged(!widget.useLightTheme) // _showShoppingCart
+                  onPressed: () => widget.onThemeChanged(!widget.useLightTheme)
               )
             ],
           ),
@@ -125,9 +137,10 @@ class _PostPageState extends State<PostPage> {
                 ),
               ),
               _buildParagraphs(_getText().take(3)),
-              _showText
-                  ? _buildParagraphs(_getText().skip(3))
-                  : new Container(),
+              new FadeTransition(
+                  opacity: _drawerContentsOpacity,
+                  child: _buildParagraphs(_getText().skip(3))
+              )
             ],
             ),
           ),
