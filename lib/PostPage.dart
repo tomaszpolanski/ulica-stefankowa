@@ -32,11 +32,10 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
-  static final GlobalKey<ScaffoldState> _scaffoldKey =
-  new GlobalKey<ScaffoldState>();
-  bool _showText = false;
+  static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<
+      ScaffoldState>();
   AnimationController _controller;
-  Animation<double> _drawerContentsOpacity;
+  Animation<double> _paragraphContentsOpacity;
 
   @override
   void initState() {
@@ -45,20 +44,11 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
-    _drawerContentsOpacity = new CurvedAnimation(
+    _paragraphContentsOpacity = new CurvedAnimation(
       parent: _controller,
       curve: Curves.linear,
     );
-    _delayText();
     _controller.forward();
-  }
-
-  Future _delayText() async {
-    // TODO Temporary solution until connected to navigation transition callback
-    await new Future.delayed(const Duration(milliseconds: 500));
-    setState(() {
-      _showText = true;
-    });
   }
 
   TextStyle _getStyle(String type, TextStyle style) {
@@ -113,10 +103,15 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
         slivers: <Widget>[
           new SliverAppBar(
             floating: true,
-            title: buildTitle(widget.post.title, Theme
-                .of(context)
-                .textTheme
-                .title),
+            title: buildThemedText(widget.post.title,
+                Theme
+                    .of(context)
+                    .textTheme
+                    .title,
+                Theme
+                    .of(context)
+                    .brightness
+            ),
             actions: <Widget>[
               new IconButton(
                   icon: const Icon(Icons.visibility),
@@ -138,7 +133,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
               ),
               _buildParagraphs(_getText().take(3)),
               new FadeTransition(
-                  opacity: _drawerContentsOpacity,
+                  opacity: _paragraphContentsOpacity,
                   child: _buildParagraphs(_getText().skip(3))
               )
             ],

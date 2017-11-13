@@ -60,7 +60,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      onGenerateTitle: (context) => CustomLocalizations.of(context).title,
+      onGenerateTitle: (context) =>
+      CustomLocalizations
+          .of(context)
+          .title,
       localizationsDelegates: [
         const CustomLocalizationsDelegate(),
         PolishMaterialLocalizations.delegate,
@@ -72,13 +75,13 @@ class _MyAppState extends State<MyApp> {
       ],
       theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
       home: new MyHomePage(
-          prismic: new Prismic(),
-          useLightTheme: _useLightTheme,
-          onThemeChanged: (bool value) {
-            setState(() {
-              _useLightTheme = value;
-            });
-          },
+        prismic: new Prismic(),
+        useLightTheme: _useLightTheme,
+        onThemeChanged: (bool value) {
+          setState(() {
+            _useLightTheme = value;
+          });
+        },
         timeDilation: _timeDilation,
         onTimeDilationChanged: (double value) {
           setState(() {
@@ -89,7 +92,8 @@ class _MyAppState extends State<MyApp> {
               // We delay the time dilation change long enough that the user can see
               // that the checkbox in the drawer has started reacting, then we slam
               // on the brakes so that they see that the time is in fact now dilated.
-              _timeDilationTimer = new Timer(const Duration(milliseconds: 150), () {
+              _timeDilationTimer =
+              new Timer(const Duration(milliseconds: 150), () {
                 timeDilation = _timeDilation;
               });
             } else {
@@ -229,10 +233,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     .of(context)
                     .backgroundColor),
                 padding: const EdgeInsets.all(16.0),
-                child: buildTitle(post.title, const TextStyle(
-                  fontFamily: "Lobster",
-                  fontSize: 25.0,
-                )),
+                child: buildThemedText(post.title,
+                    const TextStyle(
+                      fontFamily: "Lobster",
+                      fontSize: 25.0,),
+                    Theme
+                        .of(context)
+                        .brightness),
               ),
             ],
           ),
@@ -247,7 +254,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: new MainDrawer(
-          title: CustomLocalizations.of(context).title,
+          title: CustomLocalizations
+              .of(context)
+              .title,
           useLightTheme: widget.useLightTheme,
           onThemeChanged: widget.onThemeChanged,
           timeDilation: widget.timeDilation,
@@ -274,10 +283,16 @@ class _MyHomePageState extends State<MyHomePage> {
               floating: false,
               expandedHeight: _kFlexibleSpaceMaxHeight,
               flexibleSpace: new FlexibleSpaceBar(
-                title: buildTitle(CustomLocalizations.of(context).title, Theme
+                title: buildThemedText(CustomLocalizations
                     .of(context)
-                    .textTheme
-                    .title),
+                    .title,
+                    Theme
+                        .of(context)
+                        .textTheme
+                        .title,
+                    Theme
+                        .of(context)
+                        .brightness),
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[

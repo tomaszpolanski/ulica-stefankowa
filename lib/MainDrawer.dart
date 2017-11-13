@@ -127,10 +127,18 @@ class MainDrawer extends StatelessWidget {
       new Container(
         padding: const EdgeInsets.only(
             top: 30.0, left: 20.0, right: 20.0, bottom: 10.0),
-        child: buildTitle(title, Theme
-            .of(context)
-            .textTheme
-            .display2),
+        child: buildThemedText(title,
+            const TextStyle(
+              fontFamily: "Lobster",
+              fontSize: 25.0,).copyWith(fontSize:
+            Theme
+                .of(context)
+                .textTheme
+                .display1
+                .fontSize),
+            Theme
+                .of(context)
+                .brightness),
       ),
       lightThemeItem,
       const Divider(),
