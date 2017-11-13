@@ -29,7 +29,7 @@ class CustomLocalizations {
     'pl': {
       'title': 'UliCa SteFAnkOwA',
       'useLightTheme': 'Użyj jasnego motywu',
-      'slowAnimations': 'Powolne animacji',
+      'slowAnimations': 'Powolne animacje',
       'appVersion': '2017 Beta',
       'appCopy': '© 2017 Tomek & Paweł Polańscy',
       'appDescription': 'TODO Do zrobienia \n',
