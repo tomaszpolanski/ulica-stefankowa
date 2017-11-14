@@ -51,6 +51,14 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
     _controller.forward();
   }
 
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller = null;
+    super.dispose();
+  }
+
   TextStyle _getStyle(String type, TextStyle style) {
     switch (type) {
       case "strong":
