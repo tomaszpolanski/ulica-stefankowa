@@ -1,11 +1,10 @@
-
 import './Paragraph.dart';
 
 class Post {
   Post({this.title, this.imageUrl, this.description, this.text});
 
-  String title;
-  String imageUrl;
-  String description;
-  List<Paragraph> text;
+  final String title;
+  final String imageUrl;
+  final String description;
+  final List<Paragraph> text;
 }

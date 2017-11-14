@@ -131,12 +131,19 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class PostCard {
+  PostCard({this.post, this.animationController});
+
+  final Post post;
+  final AnimationController animationController;
+}
+
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
   new GlobalKey<ScaffoldState>();
 
-  List<Post> _posts = new List();
-  StreamSubscription<List<Post>> _subscription;
+  List<PostCard> _posts = new List();
+  StreamSubscription<List<PostCard>> _subscription;
 
   double _textScaleFactor = 20.0;
 
@@ -149,13 +156,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    super.dispose();
+    for (PostCard post in _posts) {
+      post.animationController.dispose();
+    }
     _subscription.cancel();
+    super.dispose();
   }
 
-  StreamSubscription<List<Post>> _fetch() {
+  StreamSubscription<List<PostCard>> _fetch() {
     return widget.prismic.getPosts()
-        .map((json) => json["results"].map(_parsePost).toList())
+        .map((json) =>
+        json["results"]
+            .map(_parsePost)
+            .map(_postCard)
+            .toList())
         .listen((respo) =>
         setState(() {
           _posts = respo;
@@ -206,47 +220,61 @@ class _MyHomePageState extends State<MyHomePage> {
         title: title, imageUrl: image, description: description, text: text);
   }
 
-  List<Widget> buildItem(List<Post> posts) {
+  PostCard _postCard(dynamic post) {
+    var animationController = new AnimationController(
+      duration: new Duration(milliseconds: 500),
+      vsync: this,
+    );
+    animationController.forward();
+    return new PostCard(post: post, animationController: animationController);
+  }
+
+  List<Widget> buildItem(List<PostCard> posts) {
     return posts
         .map((post) =>
-    new Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: new InkWell(
-        onTap: () =>
-            Navigator.of(context).push(new MaterialPageRoute(
-              builder: (_) =>
-              new PostPage(
-                  post: post,
-                  useLightTheme: widget.useLightTheme,
-                  onThemeChanged: widget.onThemeChanged,
-                  textScale: _textScaleFactor),
-            )),
-        child: new Card(
-          child: new Stack(
-            alignment: Alignment.bottomLeft,
-            children: <Widget>[
-              new PhotoHero(
-                photo: post.imageUrl,
-              ),
-              new Container(
-                decoration: new BoxDecoration(color: Theme
-                    .of(context)
-                    .backgroundColor),
-                padding: const EdgeInsets.all(16.0),
-                child: buildThemedText(post.title,
-                    const TextStyle(
-                      fontFamily: "Lobster",
-                      fontSize: 25.0,),
-                    Theme
-                        .of(context)
-                        .brightness),
-              ),
-            ],
+    new SizeTransition(
+      sizeFactor: new CurvedAnimation(
+          parent: post.animationController, curve: Curves.easeOut),
+      axisAlignment: 0.0,
+      child: new Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: new InkWell(
+          onTap: () =>
+              Navigator.of(context).push(new MaterialPageRoute(
+                builder: (_) =>
+                new PostPage(
+                    post: post.post,
+                    useLightTheme: widget.useLightTheme,
+                    onThemeChanged: widget.onThemeChanged,
+                    textScale: _textScaleFactor),
+              )),
+          child: new Card(
+            child: new Stack(
+              alignment: Alignment.bottomLeft,
+              children: <Widget>[
+                new PhotoHero(
+                  photo: post.post.imageUrl,
+                ),
+                new Container(
+                  decoration: new BoxDecoration(color: Theme
+                      .of(context)
+                      .backgroundColor),
+                  padding: const EdgeInsets.all(16.0),
+                  child: buildThemedText(post.post.title,
+                      const TextStyle(
+                        fontFamily: "Lobster",
+                        fontSize: 25.0,),
+                      Theme
+                          .of(context)
+                          .brightness),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ))
-        .toList();
+    ),
+    ).toList();
   }
 
   @override
@@ -310,6 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ));
   }
+
 }
 
 
