@@ -30,6 +30,7 @@ flutter:
   uses-material-design: true
   assets:
     - images/header.jpg
+    - images/header-dark.png
     - images/logo.png
   fonts:
     - family: Serif

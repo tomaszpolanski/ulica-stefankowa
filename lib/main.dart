@@ -360,8 +360,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 background: new Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
-                    new Image.asset(
-                      'images/header.jpg',
+                    new Image.asset(Theme
+                        .of(context)
+                        .brightness == Brightness.dark
+                        ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
+                        : 'images/header.jpg',
                       fit: BoxFit.cover,
                       height: _kFlexibleSpaceMaxHeight,
                     ),
