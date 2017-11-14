@@ -53,7 +53,6 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
-    _controller = null;
     super.dispose();
   }
 
