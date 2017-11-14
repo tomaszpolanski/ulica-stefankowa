@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:meta/meta.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:ulicastefankowa/MainDrawer.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/network/Prismic.dart';
+import 'package:ulicastefankowa/storage/Settings.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 import './Paragraph.dart';
@@ -27,33 +29,55 @@ final ThemeData _kGalleryDarkTheme = new ThemeData(
   primarySwatch: Colors.orange,
 );
 
-const String _kYesIKnow_willChange = "MC5XZ1hlYWlnQUFGb0stWmZr.77-9Vi1_Du-_ve-_ve-_ve-_vUkO77-977-9Ou-_ve-_ve-_vWPvv73vv73vv73vv73vv71777-9dSbvv71ube-_ve-_vQ";
-
 void main() {
   runApp(new MyApp());
 }
 
 class MyApp extends StatefulWidget {
-
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => new _MyAppState(settings: new Settings());
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _useLightTheme = true;
-  double _timeDilation = 1.0;
+  bool _useLightTheme;
+  double _timeDilation;
+  double _textScaleFactor;
   Timer _timeDilationTimer;
+
+  Settings settings;
+  final PublishSubject<Null> _saveSettingsSubject = new PublishSubject();
+  StreamSubscription _saveSettingsSubscription;
+
+  _MyAppState({this.settings});
+
 
   @override
   void initState() {
-    _timeDilation = timeDilation;
+    _useLightTheme = settings.useLightTheme;
+    timeDilation = _timeDilation = settings.timeDilation;
+    _textScaleFactor = settings.textSize;
+    readSettings();
+    _saveSettingsSubscription = _saveSettingsSubject
+        .stream
+        .debounce(new Duration(seconds: 1))
+        .listen((_) => settings.saveSettings());
     super.initState();
+  }
+
+  Future readSettings() async {
+    await settings.readSettings();
+    setState(() {
+      _useLightTheme = settings.useLightTheme;
+      timeDilation = _timeDilation = settings.timeDilation;
+      _textScaleFactor = settings.textSize;
+    });
   }
 
   @override
   void dispose() {
     _timeDilationTimer?.cancel();
     _timeDilationTimer = null;
+    _saveSettingsSubscription.cancel();
     super.dispose();
   }
 
@@ -79,15 +103,16 @@ class _MyAppState extends State<MyApp> {
         useLightTheme: _useLightTheme,
         onThemeChanged: (bool value) {
           setState(() {
-            _useLightTheme = value;
+            _useLightTheme = settings.useLightTheme = value;
           });
+          _saveSettingsSubject.add(null);
         },
         timeDilation: _timeDilation,
         onTimeDilationChanged: (double value) {
           setState(() {
             _timeDilationTimer?.cancel();
             _timeDilationTimer = null;
-            _timeDilation = value;
+            _timeDilation = settings.timeDilation = value;
             if (_timeDilation > 1.0) {
               // We delay the time dilation change long enough that the user can see
               // that the checkbox in the drawer has started reacting, then we slam
@@ -100,6 +125,15 @@ class _MyAppState extends State<MyApp> {
               timeDilation = _timeDilation;
             }
           });
+          _saveSettingsSubject.add(null);
+        },
+        fontSize: _textScaleFactor,
+        onFontSizeChanged: (double value) {
+          setState(() {
+            _textScaleFactor = settings.textSize = value;
+          });
+
+          _saveSettingsSubject.add(null);
         },
       ),
     );
@@ -113,10 +147,14 @@ class MyHomePage extends StatefulWidget {
     this.useLightTheme,
     @required this.onThemeChanged,
     this.timeDilation,
-    this.onTimeDilationChanged,})
+    this.onTimeDilationChanged,
+    this.fontSize,
+    this.onFontSizeChanged,
+  })
       : assert(prismic != null),
         assert(onThemeChanged != null),
         assert(onTimeDilationChanged != null),
+        assert(onFontSizeChanged != null),
         super(key: key);
 
   final Prismic prismic;
@@ -126,6 +164,10 @@ class MyHomePage extends StatefulWidget {
 
   final double timeDilation;
   final ValueChanged<double> onTimeDilationChanged;
+
+
+  final double fontSize;
+  final ValueChanged<double> onFontSizeChanged;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -144,8 +186,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   List<PostCard> _posts = new List();
   StreamSubscription<List<PostCard>> _subscription;
-
-  double _textScaleFactor = 20.0;
 
 
   @override
@@ -246,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     post: post.post,
                     useLightTheme: widget.useLightTheme,
                     onThemeChanged: widget.onThemeChanged,
-                    textScale: _textScaleFactor),
+                    textScale: widget.fontSize),
               )),
           child: new Card(
             child: new Stack(
@@ -289,12 +329,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           onThemeChanged: widget.onThemeChanged,
           timeDilation: widget.timeDilation,
           onTimeDilationChanged: widget.onTimeDilationChanged,
-          textScaleFactor: _textScaleFactor,
-          onTextScaleFactorChanged: (double value) {
-            setState(() {
-              _textScaleFactor = value;
-            });
-          },
+          textScaleFactor: widget.fontSize,
+          onTextScaleFactorChanged: widget.onFontSizeChanged,
 //          showPerformanceOverlay: widget.showPerformanceOverlay,
 //          onShowPerformanceOverlayChanged: widget.onShowPerformanceOverlayChanged,
 //          checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
