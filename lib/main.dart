@@ -280,7 +280,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: new InkWell(
           onTap: () =>
-              Navigator.of(context).push(new MaterialPageRoute(
+              Navigator.of(context).push(new FullSlideTransitionRoute(
+                settings: const RouteSettings(),
                 builder: (_) =>
                 new PostPage(
                     post: post.post,
@@ -381,3 +382,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 }
 
 
+class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
+  FullSlideTransitionRoute({ WidgetBuilder builder, RouteSettings settings })
+      : super(builder: builder, settings: settings);
+
+  final Tween<Offset> _kBottomUpTween = new Tween<Offset>(
+    begin: const Offset(0.0, 1.0),
+    end: Offset.zero,
+  );
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    return new SlideTransition(position: _kBottomUpTween.animate(new CurvedAnimation(
+      parent: animation,
+      curve: Curves.fastOutSlowIn,
+    )), child: child);
+  }
+}
