@@ -37,6 +37,7 @@ class Settings {
 
   Map<String, dynamic> _getSettings() {
     return {
+      'version': _version,
       'useLightTheme': useLightTheme,
       'timeDilation': timeDilation,
       'textSize': textSize,
