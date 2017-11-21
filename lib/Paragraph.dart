@@ -1,8 +1,17 @@
 class Paragraph {
-  Paragraph({this.text, this.spans});
+}
+
+class TextParagraph extends Paragraph {
+  TextParagraph({this.text, this.spans});
 
   String text;
   List<ProperSpan> spans;
+}
+
+class ImageParagraph extends Paragraph {
+  ImageParagraph({this.url});
+
+  String url;
 }
 
 class Span {

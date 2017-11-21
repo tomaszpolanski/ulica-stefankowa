@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:ulicastefankowa/Paragraph.dart';
 import 'package:ulicastefankowa/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
@@ -30,31 +31,9 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
-  static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<
-      ScaffoldState>();
-  AnimationController _controller;
-  Animation<double> _paragraphContentsOpacity;
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+  new GlobalKey<ScaffoldState>();
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = new AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    _paragraphContentsOpacity = new CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    );
-    _controller.forward();
-  }
-
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   TextStyle _getStyle(String type, TextStyle style) {
     switch (type) {
@@ -73,20 +52,38 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
     }
   }
 
-  Iterable<TextSpan> _getText() {
-    return widget.post.text.expand((it) =>
-        it.spans.map((span) =>
-        new TextSpan(
-            text: span.text,
-            style: _getStyle(span.type, Theme
-                .of(context)
-                .textTheme
-                .title
-                .copyWith(fontSize: widget.textScale)))
-        ));
+  TextSpan _getSpan(ProperSpan span) {
+    return new TextSpan(
+        text: span.text,
+        style: _getStyle(span.type, Theme
+            .of(context)
+            .textTheme
+            .title
+            .copyWith(fontSize: widget.textScale)));
   }
 
-  Widget _buildParagraphs(Iterable<TextSpan> spans) {
+  List<Widget> _getWidgets() {
+    List<Widget> content = [new Container(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: new PhotoHero(
+        photo: widget.post.imageUrl,
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    )
+    ];
+    content.addAll(widget.post.text.map((it) =>
+    it is TextParagraph
+        ? _buildTextParagraphs(it.spans.map((span) => _getSpan(span)))
+        : it is ImageParagraph
+        ? _buildImageParagraphs(it.url)
+        : new Container()
+    ));
+    return content;
+  }
+
+  Widget _buildTextParagraphs(Iterable<TextSpan> spans) {
     return new Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: new RichText(
@@ -99,6 +96,16 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildImageParagraphs(String image) {
+    return new Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: new FadeInImage.assetNetwork(
+          image: image,
+          placeholder: 'images/header.jpg',
+          fit: BoxFit.contain,
+        )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,25 +132,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
               )
             ],
           ),
-          new SliverList(
-            delegate: new SliverChildListDelegate(<Widget>[
-              new Container(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: new PhotoHero(
-                  photo: widget.post.imageUrl,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              _buildParagraphs(_getText().take(3)),
-              new FadeTransition(
-                  opacity: _paragraphContentsOpacity,
-                  child: _buildParagraphs(_getText().skip(3))
-              )
-            ],
-            ),
-          ),
+          new SliverList(delegate: new SliverChildListDelegate(_getWidgets())),
         ],
       ),
     );

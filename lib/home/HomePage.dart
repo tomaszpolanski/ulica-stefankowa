@@ -91,14 +91,21 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Paragraph _getParagraph(dynamic paragraph) {
-    String text = paragraph["text"] + "\n";
-    var spans = paragraph["spans"].map((it) =>
-    new Span(start: it["start"],
-        end: it["end"],
-        type: it["type"]))
-        .toList();
-    return new Paragraph(
-        text: paragraph["text"], spans: _getSpan(spans, text).toList());
+    if (paragraph["text"] != null) {
+      String text = paragraph["text"] + "\n";
+      var spans = paragraph["spans"].map((it) =>
+      new Span(start: it["start"],
+          end: it["end"],
+          type: it["type"]))
+          .toList();
+      return new TextParagraph(
+          text: paragraph["text"], spans: _getSpan(spans, text).toList());
+    } else if (paragraph["url"] != null) {
+      return new ImageParagraph(
+          url: paragraph["url"]);
+    } else {
+      return null;
+    }
   }
 
   Iterable<ProperSpan> _getSpan(List<Span> spans, String text) sync* {
@@ -129,7 +136,10 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     var image = body["image"]["url"];
     var title = body["title"].first["text"];
     var description = body["description"].first["text"];
-    var text = body["text"].map((it) => _getParagraph(it)).toList();
+    var text = body["text"]
+        .map((it) => _getParagraph(it))
+        .where((it) => it != null)
+        .toList();
     return new Post(
         title: title, imageUrl: image, description: description, text: text);
   }
@@ -266,10 +276,12 @@ class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
   );
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-    return new SlideTransition(position: _kBottomUpTween.animate(new CurvedAnimation(
-      parent: animation,
-      curve: Curves.fastOutSlowIn,
-    )), child: child);
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return new SlideTransition(
+        position: _kBottomUpTween.animate(new CurvedAnimation(
+          parent: animation,
+          curve: Curves.fastOutSlowIn,
+        )), child: child);
   }
 }
