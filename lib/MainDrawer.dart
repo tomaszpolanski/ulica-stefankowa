@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:ulicastefankowa/about/AboutPage.dart';
 import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -57,19 +58,20 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    final TextStyle aboutTextStyle = themeData.textTheme.body2;
-    final TextStyle linkStyle = themeData.textTheme.body2.copyWith(
-        color: themeData.accentColor);
+
 
     final Widget lightThemeItem =
     new SwitchListTile(
-        title: new Text(CustomLocalizations.of(context).useLightTheme),
+        title: new Text(CustomLocalizations
+            .of(context)
+            .useLightTheme),
         value: useLightTheme,
         onChanged: onThemeChanged);
 
     final Widget animateSlowlyItem = new CheckboxListTile(
-      title: new Text(CustomLocalizations.of(context).slowAnimations),
+      title: new Text(CustomLocalizations
+          .of(context)
+          .slowAnimations),
       value: timeDilation != 1.0,
       onChanged: (bool value) {
         onTimeDilationChanged(value ? 20.0 : 1.0);
@@ -79,48 +81,20 @@ class MainDrawer extends StatelessWidget {
     );
 
 
-    final Widget aboutItem = new AboutListTile(
-        icon: new Image.asset(
-            'images/logo.png',
-            fit: BoxFit.cover),
-        applicationVersion: CustomLocalizations.of(context).appVersion,
-        applicationIcon: new Image.asset(
-            'images/logo.png',
-            height: 100.0,
-            fit: BoxFit.cover),
-        applicationLegalese: CustomLocalizations.of(context).appCopy,
-        aboutBoxChildren: <Widget>[
-          new Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: new RichText(
-                  text: new TextSpan(
-                      children: <TextSpan>[
-                        new TextSpan(
-                            style: aboutTextStyle,
-                            text: CustomLocalizations.of(context).appDescription
-                        ),
-                        new LinkTextSpan(
-                            style: linkStyle,
-                            url: 'http://ulicastefankowa.pl'
-                        ),
-                        new TextSpan(
-                            style: aboutTextStyle,
-                            text: CustomLocalizations.of(context).appSourceCode
-                        ),
-                        new LinkTextSpan(
-                            style: linkStyle,
-                            url: 'https://goo.gl/cYD8Dq',
-                            text: CustomLocalizations.of(context).appRepoLink
-                        ),
-                        new TextSpan(
-                            style: aboutTextStyle,
-                            text: '.'
-                        )
-                      ]
-                  )
-              )
-          )
-        ]
+    final Widget aboutItem = new ListTile(
+      leading: new Image.asset(
+          'images/logo.png',
+          fit: BoxFit.cover),
+      title: new Text(CustomLocalizations
+          .of(context)
+          .aboutBlog),
+      onTap: () =>
+          Navigator.of(context).push(new MaterialPageRoute(
+              builder: (_) => new AboutPage(title: CustomLocalizations
+                  .of(context)
+                  .aboutBlog)
+          )),
+
     );
 
     final List<Widget> allDrawerItems = <Widget>[
@@ -146,7 +120,9 @@ class MainDrawer extends StatelessWidget {
       new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          new Text(CustomLocalizations.of(context).postFontSize,
+          new Text(CustomLocalizations
+              .of(context)
+              .postFontSize,
               textAlign: TextAlign.center,
               style: Theme
                   .of(context)

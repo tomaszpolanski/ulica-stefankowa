@@ -32,6 +32,7 @@ flutter:
     - images/header.jpg
     - images/header-dark.png
     - images/logo.png
+    - images/aga.jpg
   fonts:
     - family: Serif
       fonts:
