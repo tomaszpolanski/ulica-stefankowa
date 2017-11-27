@@ -54,24 +54,27 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   TextSpan _getSpan(ProperSpan span) {
     return new TextSpan(
-        text: span.text,
-        style: _getStyle(span.type, Theme
-            .of(context)
-            .textTheme
-            .title
-            .copyWith(fontSize: widget.textScale)));
+      text: span.text,
+      style: _getStyle(span.type, Theme
+          .of(context)
+          .textTheme
+          .title
+          .copyWith(fontSize: widget.textScale),
+      ),
+    );
   }
 
   List<Widget> _getWidgets() {
-    List<Widget> content = [new Container(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: new PhotoHero(
-        photo: widget.post.imageUrl,
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    )
+    List<Widget> content = [
+      new Container(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: new PhotoHero(
+          photo: widget.post.imageUrl,
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      )
     ];
     content.addAll(widget.post.text.map((it) =>
     it is TextParagraph
@@ -89,8 +92,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
       child: new RichText(
         textAlign: TextAlign.justify,
         text: new TextSpan(
-            children: spans
-                .toList()
+          children: spans.toList(),
         ),
       ),
     );
@@ -98,12 +100,12 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   Widget _buildImageParagraphs(String image) {
     return new Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: new FadeInImage.assetNetwork(
-          image: image,
-          placeholder: 'images/header.jpg',
-          fit: BoxFit.contain,
-        )
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: new FadeInImage.assetNetwork(
+        image: image,
+        placeholder: 'images/header.jpg',
+        fit: BoxFit.contain,
+      ),
     );
   }
 
@@ -116,20 +118,20 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
           new SliverAppBar(
             floating: true,
             title: buildThemedText(widget.post.title,
-                Theme
-                    .of(context)
-                    .textTheme
-                    .title,
-                Theme
-                    .of(context)
-                    .brightness
+              Theme
+                  .of(context)
+                  .textTheme
+                  .title,
+              Theme
+                  .of(context)
+                  .brightness,
             ),
             actions: <Widget>[
               new IconButton(
-                  icon: const Icon(Icons.visibility),
-                  tooltip: 'Theme',
-                  onPressed: () => widget.onThemeChanged(!widget.useLightTheme)
-              )
+                icon: const Icon(Icons.visibility),
+                tooltip: 'Theme',
+                onPressed: () => widget.onThemeChanged(!widget.useLightTheme),
+              ),
             ],
           ),
           new SliverList(delegate: new SliverChildListDelegate(_getWidgets())),

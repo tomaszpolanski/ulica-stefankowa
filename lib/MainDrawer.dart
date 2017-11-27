@@ -58,8 +58,6 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     final Widget lightThemeItem =
     new SwitchListTile(
         title: new Text(CustomLocalizations
@@ -90,7 +88,8 @@ class MainDrawer extends StatelessWidget {
           .aboutBlog),
       onTap: () =>
           Navigator.of(context).push(new MaterialPageRoute(
-              builder: (_) => new AboutPage(title: CustomLocalizations
+              builder: (_) =>
+              new AboutPage(title: CustomLocalizations
                   .of(context)
                   .aboutBlog)
           )),
@@ -123,23 +122,23 @@ class MainDrawer extends StatelessWidget {
           new Text(CustomLocalizations
               .of(context)
               .postFontSize,
-              textAlign: TextAlign.center,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .title
-                  .copyWith(fontFamily: "Serif",
-                  wordSpacing: 4.0,
-                  fontSize: textScaleFactor)),
-          new Slider(
-              value: textScaleFactor,
-              min: 10.0,
-              max: 40.0,
-              label: '${textScaleFactor.round()}',
-              thumbOpenAtMin: true,
-              onChanged: onTextScaleFactorChanged
+            textAlign: TextAlign.center,
+            style: Theme
+                .of(context)
+                .textTheme
+                .title
+                .copyWith(fontFamily: "Serif",
+                wordSpacing: 4.0,
+                fontSize: textScaleFactor),
           ),
-
+          new Slider(
+            value: textScaleFactor,
+            min: 10.0,
+            max: 40.0,
+            label: '${textScaleFactor.round()}',
+            thumbOpenAtMin: true,
+            onChanged: onTextScaleFactorChanged,
+          ),
         ],
       ),
     ];

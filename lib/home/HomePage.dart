@@ -158,21 +158,25 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
         .map((post) =>
     new SizeTransition(
       sizeFactor: new CurvedAnimation(
-          parent: post.animationController, curve: Curves.easeOut),
+        parent: post.animationController, curve: Curves.easeOut,
+      ),
       axisAlignment: 0.0,
       child: new Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: new InkWell(
-          onTap: () =>
-              Navigator.of(context).push(new FullSlideTransitionRoute(
-                settings: const RouteSettings(),
-                builder: (_) =>
-                new PostPage(
-                    post: post.post,
-                    useLightTheme: widget.useLightTheme,
-                    onThemeChanged: widget.onThemeChanged,
-                    textScale: widget.fontSize),
-              )),
+          onTap: () {
+            Navigator.of(context).push(new FullSlideTransitionRoute(
+              settings: const RouteSettings(),
+              builder: (_) =>
+              new PostPage(
+                post: post.post,
+                useLightTheme: widget.useLightTheme,
+                onThemeChanged: widget.onThemeChanged,
+                textScale: widget.fontSize,
+              ),
+            ),
+            );
+          },
           child: new Card(
             child: new Stack(
               alignment: Alignment.bottomLeft,
@@ -181,17 +185,22 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
                   photo: post.post.imageUrl,
                 ),
                 new Container(
-                  decoration: new BoxDecoration(color: Theme
-                      .of(context)
-                      .backgroundColor),
+                  decoration: new BoxDecoration(
+                    color: Theme
+                        .of(context)
+                        .backgroundColor,
+                  ),
                   padding: const EdgeInsets.all(16.0),
-                  child: buildThemedText(post.post.title,
-                      const TextStyle(
-                        fontFamily: "Lobster",
-                        fontSize: 25.0,),
-                      Theme
-                          .of(context)
-                          .brightness),
+                  child: buildThemedText(
+                    post.post.title,
+                    const TextStyle(
+                      fontFamily: "Lobster",
+                      fontSize: 25.0,
+                    ),
+                    Theme
+                        .of(context)
+                        .brightness,
+                  ),
                 ),
               ],
             ),
@@ -205,64 +214,56 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldKey,
-        drawer: new MainDrawer(
-          title: CustomLocalizations
-              .of(context)
-              .title,
-          useLightTheme: widget.useLightTheme,
-          onThemeChanged: widget.onThemeChanged,
-          timeDilation: widget.timeDilation,
-          onTimeDilationChanged: widget.onTimeDilationChanged,
-          textScaleFactor: widget.fontSize,
-          onTextScaleFactorChanged: widget.onFontSizeChanged,
-//          showPerformanceOverlay: widget.showPerformanceOverlay,
-//          onShowPerformanceOverlayChanged: widget.onShowPerformanceOverlayChanged,
-//          checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
-//          onCheckerboardRasterCacheImagesChanged: widget.onCheckerboardRasterCacheImagesChanged,
-//          checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
-//          onCheckerboardOffscreenLayersChanged: widget.onCheckerboardOffscreenLayersChanged,
-//          onPlatformChanged: widget.onPlatformChanged,
-//          onSendFeedback: widget.onSendFeedback,
-        ),
-        body: new CustomScrollView(
-          slivers: <Widget>[
-            new SliverAppBar(
-              pinned: true,
-              floating: false,
-              expandedHeight: _kFlexibleSpaceMaxHeight,
-              flexibleSpace: new FlexibleSpaceBar(
-                title: buildThemedText(CustomLocalizations
-                    .of(context)
-                    .title,
-                    Theme
-                        .of(context)
-                        .textTheme
-                        .title,
-                    Theme
-                        .of(context)
-                        .brightness),
-                background: new Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    new Image.asset(Theme
-                        .of(context)
-                        .brightness == Brightness.dark
-                        ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
-                        : 'images/header.jpg',
-                      fit: BoxFit.cover,
-                      height: _kFlexibleSpaceMaxHeight,
-                    ),
-                  ],
-                ),
+      key: _scaffoldKey,
+      drawer: new MainDrawer(
+        title: CustomLocalizations
+            .of(context)
+            .title,
+        useLightTheme: widget.useLightTheme,
+        onThemeChanged: widget.onThemeChanged,
+        timeDilation: widget.timeDilation,
+        onTimeDilationChanged: widget.onTimeDilationChanged,
+        textScaleFactor: widget.fontSize,
+        onTextScaleFactorChanged: widget.onFontSizeChanged,
+      ),
+      body: new CustomScrollView(
+        slivers: <Widget>[
+          new SliverAppBar(
+            pinned: true,
+            floating: false,
+            expandedHeight: _kFlexibleSpaceMaxHeight,
+            flexibleSpace: new FlexibleSpaceBar(
+              title: buildThemedText(CustomLocalizations
+                  .of(context)
+                  .title,
+                  Theme
+                      .of(context)
+                      .textTheme
+                      .title,
+                  Theme
+                      .of(context)
+                      .brightness),
+              background: new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image.asset(Theme
+                      .of(context)
+                      .brightness == Brightness.dark
+                      ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
+                      : 'images/header.jpg',
+                    fit: BoxFit.cover,
+                    height: _kFlexibleSpaceMaxHeight,
+                  ),
+                ],
               ),
             ),
-            new SliverList(
-                delegate: new SliverChildListDelegate(buildItem(_posts))),
-          ],
-        ));
+          ),
+          new SliverList(
+              delegate: new SliverChildListDelegate(buildItem(_posts))),
+        ],
+      ),
+    );
   }
-
 }
 
 
@@ -277,11 +278,14 @@ class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    return new SlideTransition(
-        position: _kBottomUpTween.animate(new CurvedAnimation(
-          parent: animation,
-          curve: Curves.fastOutSlowIn,
-        )), child: child);
-  }
+      Animation<double> secondaryAnimation, Widget child) =>
+      new SlideTransition(
+          position: _kBottomUpTween.animate(
+            new CurvedAnimation(
+              parent: animation,
+              curve: Curves.fastOutSlowIn,
+            ),
+          ),
+          child: child);
 }
+

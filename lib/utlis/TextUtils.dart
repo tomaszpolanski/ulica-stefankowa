@@ -21,8 +21,9 @@ RichText buildThemedText(String title, TextStyle baseStyle,
     Brightness brightness) =>
     new RichText(
       text: new TextSpan(
-          children: _getColoredTextSpans(
-              title, baseStyle, brightness == Brightness.dark).toList()),
+        children: _getColoredTextSpans(
+            title, baseStyle, brightness == Brightness.dark).toList(),
+      ),
     );
 
 Iterable<TextSpan> _getColoredTextSpans(String title,
@@ -30,9 +31,10 @@ Iterable<TextSpan> _getColoredTextSpans(String title,
   for (var i = 0; i < title.length; i++) {
     final letter = new String.fromCharCode(title.codeUnitAt(i));
     yield new TextSpan(
-        text: letter,
-        style: baseStyle.copyWith(
-            color: isDark ? dark(i, title) : light(i, title))
+      text: letter,
+      style: baseStyle.copyWith(
+        color: isDark ? dark(i, title) : light(i, title),
+      ),
     );
   }
 }
