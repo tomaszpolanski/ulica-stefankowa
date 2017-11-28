@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:ulicastefankowa/home/HomePage.dart';
 import 'package:ulicastefankowa/i18n/Localizations.dart';
+import 'package:ulicastefankowa/injection/Injector.dart';
 import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/storage/Settings.dart';
 
@@ -22,6 +23,7 @@ final ThemeData _kGalleryDarkTheme = new ThemeData(
 );
 
 void main() {
+  Injector.bind(prismic: () => new PrismicImpl());
   runApp(new MyApp());
 }
 
@@ -91,7 +93,7 @@ class _MyAppState extends State<MyApp> {
       ],
       theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
       home: new HomePage(
-        prismic: new Prismic(),
+        prismic: new Injector().prismic,
         useLightTheme: _useLightTheme,
         onThemeChanged: (bool value) {
           setState(() {
