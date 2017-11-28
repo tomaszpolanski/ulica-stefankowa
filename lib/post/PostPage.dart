@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:ulicastefankowa/Paragraph.dart';
-import 'package:ulicastefankowa/PhotoHero.dart';
+import 'package:ulicastefankowa/post/Paragraph.dart';
+import 'package:ulicastefankowa/ui/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 import './Post.dart';

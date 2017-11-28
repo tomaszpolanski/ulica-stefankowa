@@ -18,14 +18,6 @@ class MainDrawer extends StatelessWidget {
     this.onTimeDilationChanged,
     this.textScaleFactor,
     this.onTextScaleFactorChanged,
-    this.showPerformanceOverlay,
-    this.onShowPerformanceOverlayChanged,
-    this.checkerboardRasterCacheImages,
-    this.onCheckerboardRasterCacheImagesChanged,
-    this.checkerboardOffscreenLayers,
-    this.onCheckerboardOffscreenLayersChanged,
-    this.onPlatformChanged,
-    this.onSendFeedback,
   })
       : assert(title != null),
         assert(onThemeChanged != null),
@@ -42,19 +34,6 @@ class MainDrawer extends StatelessWidget {
 
   final double textScaleFactor;
   final ValueChanged<double> onTextScaleFactorChanged;
-
-  final bool showPerformanceOverlay;
-  final ValueChanged<bool> onShowPerformanceOverlayChanged;
-
-  final bool checkerboardRasterCacheImages;
-  final ValueChanged<bool> onCheckerboardRasterCacheImagesChanged;
-
-  final bool checkerboardOffscreenLayers;
-  final ValueChanged<bool> onCheckerboardOffscreenLayersChanged;
-
-  final ValueChanged<TargetPlatform> onPlatformChanged;
-
-  final VoidCallback onSendFeedback;
 
   @override
   Widget build(BuildContext context) {
@@ -149,43 +128,6 @@ class MainDrawer extends StatelessWidget {
         animateSlowlyItem,
         const Divider(),
       ]);
-
-    bool addedOptionalItem = false;
-    if (onCheckerboardOffscreenLayersChanged != null) {
-      allDrawerItems.add(new CheckboxListTile(
-        title: const Text('Checkerboard Offscreen Layers'),
-        value: checkerboardOffscreenLayers,
-        onChanged: onCheckerboardOffscreenLayersChanged,
-        secondary: const Icon(Icons.assessment),
-        selected: checkerboardOffscreenLayers,
-      ));
-      addedOptionalItem = true;
-    }
-
-    if (onCheckerboardRasterCacheImagesChanged != null) {
-      allDrawerItems.add(new CheckboxListTile(
-        title: const Text('Checkerboard Raster Cache Images'),
-        value: checkerboardRasterCacheImages,
-        onChanged: onCheckerboardRasterCacheImagesChanged,
-        secondary: const Icon(Icons.assessment),
-        selected: checkerboardRasterCacheImages,
-      ));
-      addedOptionalItem = true;
-    }
-
-    if (onShowPerformanceOverlayChanged != null) {
-      allDrawerItems.add(new CheckboxListTile(
-        title: const Text('Performance Overlay'),
-        value: showPerformanceOverlay,
-        onChanged: onShowPerformanceOverlayChanged,
-        secondary: const Icon(Icons.assessment),
-        selected: showPerformanceOverlay,
-      ));
-      addedOptionalItem = true;
-    }
-
-    if (addedOptionalItem)
-      allDrawerItems.add(const Divider());
 
     allDrawerItems.addAll(<Widget>[
       aboutItem,
