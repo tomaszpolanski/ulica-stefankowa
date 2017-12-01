@@ -43,6 +43,12 @@ android {
                 }
             }
         }
+    } else {
+        signingConfigs {
+            release {
+                v1SigningEnabled true
+            }
+        }
     }
 
     defaultConfig {
