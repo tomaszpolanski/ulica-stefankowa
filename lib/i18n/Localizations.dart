@@ -21,19 +21,19 @@ class CustomLocalizations {
       'slowAnimations': 'Slow animations',
       'appVersion': '2017 Beta',
       'appCopy': '© 2017 Tomek & Paweł Polańscy',
-      'appDescription': 'TODO Still to do \n',
+      'appDescription': "Application's web page: \n",
       'appSourceCode': '.\n\nTo see the source code for this app, please visit the ',
       'appRepoLink': 'Ulica Stefankowa Github repo',
-      'postFontSize': "Post's text size",
-      'aboutText': """TODO: Moi Drodzy Czytelnicy,
+      'postFontSize': "Story's text size",
+      'aboutText': """My Dear Readers,
 
-pomysł bloga, na którym umieszczać będę kolejne przygody prosiaczka Stefana, a z czasem również figielki i psoty innych bajkowych bohaterów, powstał z mojej pasji do opisywania świata tak,  jak ja go widzę, a może tak, jak widzieć bym go chciała…. 
+the idea of ​​a blog, on which I will place next adventures of Piglet Stefan, and in time also pranks and mischiefs of other fairy-tale heroes, came up from my passion to describe the world as I see it, and maybe as if I wanted to see it...
 
-Jako że Wy – młodzi czytelnicy – jesteście szczególnie wymagający, to dla Was chciałabym tworzyć i Wasze opinie – mam nadzieję – poznać.
+Since you - young readers - are particularly demanding, I would like to create and give your opinions - I hope - to get to know you.
 
-Zapraszam Was serdecznie do lektury zamieszczonych bajeczek, pięknie ilustrowanych przez Paulę Dudek (www.behance.net/paula_dudek).
+I invite you to read the fairy tales, beautifully illustrated by Paula Dudek (www.behance.net/paula_dudek).
 
-By nie przegapić żadnych szczegółów z życia prosiaczka, proponuję czytać bajeczki po kolei, od najwcześniejszej""",
+In order not to miss any details of the piglet's life, I suggest reading the stories from the earliest.""",
       'aboutBlog': 'About',
     },
     'pl': {
@@ -42,7 +42,7 @@ By nie przegapić żadnych szczegółów z życia prosiaczka, proponuję czytać
       'slowAnimations': 'Powolne animacje',
       'appVersion': '2017 Beta',
       'appCopy': '© 2017 Tomek & Paweł Polańscy',
-      'appDescription': 'TODO Do zrobienia \n',
+      'appDescription': 'Strona aplicacji \n',
       'appSourceCode': '.\n\nŻeby zobaczyć źródła tej aplikacji, prosze odwiedzić stronę ',
       'appRepoLink': "Ulicy Stefankowej na Github'ie",
       'postFontSize': "Wielkość czcionki artykułu",
