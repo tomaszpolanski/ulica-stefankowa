@@ -156,11 +156,8 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<Widget> buildItem(List<PostCard> posts) {
     return posts
         .map((post) =>
-    new SizeTransition(
-      sizeFactor: new CurvedAnimation(
-        parent: post.animationController, curve: Curves.easeOut,
-      ),
-      axisAlignment: 0.0,
+    new FadeTransition(
+      opacity: post.animationController,
       child: new Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: new InkWell(

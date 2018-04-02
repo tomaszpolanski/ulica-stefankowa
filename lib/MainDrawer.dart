@@ -7,7 +7,6 @@ import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
     Key key,
@@ -18,8 +17,7 @@ class MainDrawer extends StatelessWidget {
     this.onTimeDilationChanged,
     this.textScaleFactor,
     this.onTextScaleFactorChanged,
-  })
-      : assert(title != null),
+  })  : assert(title != null),
         assert(onThemeChanged != null),
         assert(onTimeDilationChanged != null),
         super(key: key);
@@ -37,18 +35,13 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget lightThemeItem =
-    new SwitchListTile(
-        title: new Text(CustomLocalizations
-            .of(context)
-            .useLightTheme),
+    final Widget lightThemeItem = new SwitchListTile(
+        title: new Text(CustomLocalizations.of(context).useLightTheme),
         value: useLightTheme,
         onChanged: onThemeChanged);
 
     final Widget animateSlowlyItem = new CheckboxListTile(
-      title: new Text(CustomLocalizations
-          .of(context)
-          .slowAnimations),
+      title: new Text(CustomLocalizations.of(context).slowAnimations),
       value: timeDilation != 1.0,
       onChanged: (bool value) {
         onTimeDilationChanged(value ? 20.0 : 1.0);
@@ -57,40 +50,25 @@ class MainDrawer extends StatelessWidget {
       selected: timeDilation != 1.0,
     );
 
-
     final Widget aboutItem = new ListTile(
-      leading: new Image.asset(
-          'images/logo.png',
-          fit: BoxFit.cover),
-      title: new Text(CustomLocalizations
-          .of(context)
-          .aboutBlog),
-      onTap: () =>
-          Navigator.of(context).push(new MaterialPageRoute(
-              builder: (_) =>
-              new AboutPage(title: CustomLocalizations
-                  .of(context)
-                  .aboutBlog)
-          )),
-
+      leading: new Image.asset('images/logo.png', fit: BoxFit.cover),
+      title: new Text(CustomLocalizations.of(context).aboutBlog),
+      onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+          builder: (_) =>
+              new AboutPage(title: CustomLocalizations.of(context).aboutBlog))),
     );
 
     final List<Widget> allDrawerItems = <Widget>[
       new Container(
         padding: const EdgeInsets.only(
             top: 30.0, left: 20.0, right: 20.0, bottom: 10.0),
-        child: buildThemedText(title,
+        child: buildThemedText(
+            title,
             const TextStyle(
               fontFamily: "Lobster",
-              fontSize: 25.0,).copyWith(fontSize:
-            Theme
-                .of(context)
-                .textTheme
-                .display1
-                .fontSize),
-            Theme
-                .of(context)
-                .brightness),
+              fontSize: 25.0,
+            ).copyWith(fontSize: Theme.of(context).textTheme.display1.fontSize),
+            Theme.of(context).brightness),
       ),
       lightThemeItem,
       const Divider(),
@@ -98,15 +76,11 @@ class MainDrawer extends StatelessWidget {
       new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          new Text(CustomLocalizations
-              .of(context)
-              .postFontSize,
+          new Text(
+            CustomLocalizations.of(context).postFontSize,
             textAlign: TextAlign.center,
-            style: Theme
-                .of(context)
-                .textTheme
-                .title
-                .copyWith(fontFamily: "Serif",
+            style: Theme.of(context).textTheme.title.copyWith(
+                fontFamily: "Serif",
                 wordSpacing: 4.0,
                 fontSize: textScaleFactor),
           ),
@@ -115,7 +89,7 @@ class MainDrawer extends StatelessWidget {
             min: 10.0,
             max: 40.0,
             label: '${textScaleFactor.round()}',
-            thumbOpenAtMin: true,
+            activeColor: Theme.of(context).accentColor,
             onChanged: onTextScaleFactorChanged,
           ),
         ],
@@ -139,7 +113,6 @@ class MainDrawer extends StatelessWidget {
 }
 
 class LinkTextSpan extends TextSpan {
-
   // Beware!
   //
   // This class is only safe because the TapGestureRecognizer is not
@@ -153,12 +126,12 @@ class LinkTextSpan extends TextSpan {
   // manage the recognizer from outside the TextSpan, e.g. in the State of a
   // stateful widget that then hands the recognizer to the TextSpan.
 
-  LinkTextSpan({ TextStyle style, String url, String text }) : super(
-      style: style,
-      text: text ?? url,
-      recognizer: new TapGestureRecognizer()
-        ..onTap = () {
-          launch(url);
-        }
-  );
+  LinkTextSpan({TextStyle style, String url, String text})
+      : super(
+            style: style,
+            text: text ?? url,
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () {
+                launch(url);
+              });
 }
