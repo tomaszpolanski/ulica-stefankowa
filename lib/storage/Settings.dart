@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class Settings {
-
   num _version = 1;
 
   bool useLightTheme = true;
@@ -23,7 +22,7 @@ class Settings {
     try {
       File file = await _getLocalFile();
       String contents = await file.readAsString();
-      Map<String, dynamic> settings = JSON.decode(contents);
+      Map<String, dynamic> settings = json.decode(contents);
       _version = settings['version'];
       useLightTheme = settings['useLightTheme'];
       timeDilation = settings['timeDilation'];
@@ -32,7 +31,7 @@ class Settings {
   }
 
   Future<Null> saveSettings() async {
-    await (await _getLocalFile()).writeAsString(JSON.encode(_getSettings()));
+    await (await _getLocalFile()).writeAsString(json.encode(_getSettings()));
   }
 
   Map<String, dynamic> _getSettings() {
@@ -44,4 +43,3 @@ class Settings {
     };
   }
 }
-

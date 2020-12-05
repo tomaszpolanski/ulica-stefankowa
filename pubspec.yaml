@@ -2,15 +2,16 @@ name: ulicastefankowa
 description: A new Flutter project.
 
 dependencies:
-  rxdart: ^0.24.0
+  rxdart: ^0.24.1
   url_launcher: ^5.7.10
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.16.0
+  intl: ^0.16.1
   intl_translation: ^0.17.0
   path_provider: ^1.6.24
+  http: ^0.12.2
 
 
 dev_dependencies:

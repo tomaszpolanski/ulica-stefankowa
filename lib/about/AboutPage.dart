@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ulicastefankowa/MainDrawer.dart';
-import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 class AboutPage extends StatelessWidget {
@@ -13,17 +12,12 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
     final TextStyle aboutTextStyle = themeData.textTheme.body2;
-    final TextStyle linkStyle = themeData.textTheme.body2.copyWith(
-        color: themeData.accentColor);
+    final TextStyle linkStyle =
+        themeData.textTheme.body2.copyWith(color: themeData.accentColor);
     return new Scaffold(
       appBar: new AppBar(
-        title: buildThemedText(title, Theme
-            .of(context)
-            .textTheme
-            .title,
-            Theme
-                .of(context)
-                .brightness),
+        title: buildThemedText(title, Theme.of(context).textTheme.title,
+            Theme.of(context).brightness),
         actions: <Widget>[
           new IconButton(
             icon: const Icon(Icons.info),
@@ -31,16 +25,9 @@ class AboutPage extends StatelessWidget {
             onPressed: () {
               showAboutDialog(
                 context: context,
-                applicationVersion: CustomLocalizations
-                    .of(context)
-                    .appVersion,
-                applicationIcon: new Image.asset(
-                    'images/logo.png',
-                    height: 100.0,
-                    fit: BoxFit.cover),
-                applicationLegalese: CustomLocalizations
-                    .of(context)
-                    .appCopy,
+                applicationIcon: new Image.asset('images/logo.png',
+                    height: 100.0, fit: BoxFit.cover),
+                applicationLegalese: 'appCopy', // TODO
                 children: <Widget>[
                   new Padding(
                     padding: const EdgeInsets.only(top: 24.0),
@@ -49,31 +36,22 @@ class AboutPage extends StatelessWidget {
                         children: <TextSpan>[
                           new TextSpan(
                             style: aboutTextStyle,
-                            text: CustomLocalizations
-                                .of(context)
-                                .appDescription,
+                            text:
+                                'CustomLocalizations.of(context).appDescription', // TODO
                           ),
                           new LinkTextSpan(
                               style: linkStyle,
-                              url: 'http://ulicastefankowa.pl'
-                          ),
+                              url: 'http://ulicastefankowa.pl'),
                           new TextSpan(
                               style: aboutTextStyle,
-                              text: CustomLocalizations
-                                  .of(context)
-                                  .appSourceCode
-                          ),
+                              text:
+                                  'CustomLocalizations.of(context).appSourceCode'), // TODO
                           new LinkTextSpan(
                               style: linkStyle,
                               url: 'https://goo.gl/cYD8Dq',
-                              text: CustomLocalizations
-                                  .of(context)
-                                  .appRepoLink
-                          ),
-                          new TextSpan(
-                              style: aboutTextStyle,
-                              text: '.'
-                          ),
+                              text:
+                                  'CustomLocalizations.of(context).appRepoLink)'), // TODO
+                          new TextSpan(style: aboutTextStyle, text: '.'),
                         ],
                       ),
                     ),
@@ -84,7 +62,6 @@ class AboutPage extends StatelessWidget {
           ),
         ],
       ),
-
       body: new Container(
         padding: const EdgeInsets.all(18.0),
         child: new ListView(
@@ -94,24 +71,17 @@ class AboutPage extends StatelessWidget {
               text: new TextSpan(
                 children: <TextSpan>[
                   new TextSpan(
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .subhead
                         .copyWith(fontStyle: FontStyle.italic),
-                    text: CustomLocalizations
-                        .of(context)
-                        .aboutText,
+                    text: 'CustomLocalizations.of(context).aboutText', // TODO
                   ),
                   new TextSpan(
                     text: "\u{E815}",
                     style: new TextStyle(
                       fontFamily: "MaterialIcons",
-                      color: Theme
-                          .of(context)
-                          .textTheme
-                          .title
-                          .color,
+                      color: Theme.of(context).textTheme.title.color,
                     ),
                   ),
                 ],
@@ -136,8 +106,7 @@ class AboutPage extends StatelessWidget {
                   new Text(
                     "Agnieszka Jakubas",
                     textAlign: TextAlign.left,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .subhead
                         .copyWith(fontStyle: FontStyle.italic),
@@ -145,8 +114,7 @@ class AboutPage extends StatelessWidget {
                   new Text(
                     "agnieszka.jakubas@ulicastefankowa.pl",
                     textAlign: TextAlign.left,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .subhead
                         .copyWith(fontStyle: FontStyle.italic),

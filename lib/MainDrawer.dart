@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/about/AboutPage.dart';
-import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -36,12 +35,13 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget lightThemeItem = new SwitchListTile(
-        title: new Text(CustomLocalizations.of(context).useLightTheme),
+        title:
+            new Text('CustomLocalizations.of(context).useLightTheme'), // TODO
         value: useLightTheme,
         onChanged: onThemeChanged);
 
     final Widget animateSlowlyItem = new CheckboxListTile(
-      title: new Text(CustomLocalizations.of(context).slowAnimations),
+      title: new Text('CustomLocalizations.of(context).slowAnimations'),
       value: timeDilation != 1.0,
       onChanged: (bool value) {
         onTimeDilationChanged(value ? 20.0 : 1.0);
@@ -51,12 +51,14 @@ class MainDrawer extends StatelessWidget {
     );
 
     final Widget aboutItem = new ListTile(
-      leading: new Image.asset('images/logo.png', fit: BoxFit.cover),
-      title: new Text(CustomLocalizations.of(context).aboutBlog),
-      onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) =>
-              new AboutPage(title: CustomLocalizations.of(context).aboutBlog))),
-    );
+        leading: new Image.asset('images/logo.png', fit: BoxFit.cover),
+        title: new Text('CustomLocalizations.of(context).aboutBlog'), // TODO
+        onTap: () => Navigator.of(context).push(
+              new MaterialPageRoute(
+                  builder: (_) => new AboutPage(
+                      title:
+                          'CustomLocalizations.of(context).aboutBlog)')), // TODO
+            ));
 
     final List<Widget> allDrawerItems = <Widget>[
       new Container(
@@ -77,7 +79,7 @@ class MainDrawer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Text(
-            CustomLocalizations.of(context).postFontSize,
+            'CustomLocalizations.of(context).postFontSize', // TODO
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.title.copyWith(
                 fontFamily: "Serif",

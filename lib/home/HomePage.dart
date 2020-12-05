@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/MainDrawer.dart';
+import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/post/Paragraph.dart';
-import 'package:ulicastefankowa/ui/PhotoHero.dart';
 import 'package:ulicastefankowa/post/Post.dart';
 import 'package:ulicastefankowa/post/PostPage.dart';
-import 'package:ulicastefankowa/i18n/Localizations.dart';
-import 'package:ulicastefankowa/network/Prismic.dart';
+import 'package:ulicastefankowa/ui/PhotoHero.dart';
 import 'package:ulicastefankowa/utlis/TextUtils.dart';
 
 const double _kFlexibleSpaceMaxHeight = 180.0;
@@ -24,8 +23,7 @@ class HomePage extends StatefulWidget {
     this.onTimeDilationChanged,
     this.fontSize,
     this.onFontSizeChanged,
-  })
-      : assert(prismic != null),
+  })  : assert(prismic != null),
         assert(onThemeChanged != null),
         assert(onTimeDilationChanged != null),
         assert(onFontSizeChanged != null),
@@ -38,7 +36,6 @@ class HomePage extends StatefulWidget {
 
   final double timeDilation;
   final ValueChanged<double> onTimeDilationChanged;
-
 
   final double fontSize;
   final ValueChanged<double> onFontSizeChanged;
@@ -56,16 +53,14 @@ class PostCard {
 
 class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
-  new GlobalKey<ScaffoldState>();
+      new GlobalKey<ScaffoldState>();
 
   List<PostCard> _posts = new List();
-  StreamSubscription<List<PostCard>> _subscription;
-
 
   @override
   void initState() {
     super.initState();
-    _subscription = _fetch();
+    _fetch();
   }
 
   @override
@@ -73,36 +68,28 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     for (PostCard post in _posts) {
       post.animationController.dispose();
     }
-    _subscription.cancel();
     super.dispose();
   }
 
-  StreamSubscription<List<PostCard>> _fetch() {
-    return widget.prismic.getPosts()
-        .map((json) =>
-        json["results"]
-            .map(_parsePost)
-            .map(_postCard)
-            .toList())
-        .listen((respo) =>
-        setState(() {
-          _posts = respo;
-        }));
+  Future<void> _fetch() async {
+    final json = await widget.prismic.getPosts();
+    print(json);
+    setState(() {
+      _posts = json["results"].map(_parsePost).map(_postCard).toList();
+    });
   }
 
   Paragraph _getParagraph(dynamic paragraph) {
     if (paragraph["text"] != null) {
       String text = paragraph["text"] + "\n";
-      var spans = paragraph["spans"].map((it) =>
-      new Span(start: it["start"],
-          end: it["end"],
-          type: it["type"]))
+      var spans = paragraph["spans"]
+          .map((it) =>
+              new Span(start: it["start"], end: it["end"], type: it["type"]))
           .toList();
       return new TextParagraph(
           text: paragraph["text"], spans: _getSpan(spans, text).toList());
     } else if (paragraph["url"] != null) {
-      return new ImageParagraph(
-          url: paragraph["url"]);
+      return new ImageParagraph(url: paragraph["url"]);
     } else {
       return null;
     }
@@ -113,13 +100,11 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     for (var span in spans) {
       if (span.start == start) {
         yield new ProperSpan(
-            text: text.substring(span.start, span.end),
-            type: span.type);
+            text: text.substring(span.start, span.end), type: span.type);
         start = span.end;
       } else if (span.start != start) {
         yield new ProperSpan(
-            text: text.substring(start, span.start - 1),
-            type: "normal");
+            text: text.substring(start, span.start - 1), type: "normal");
         start = span.start - 1;
         yield new ProperSpan(
             text: text.substring(start, span.end), type: span.type);
@@ -155,57 +140,54 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   List<Widget> buildItem(List<PostCard> posts) {
     return posts
-        .map((post) =>
-    new FadeTransition(
-      opacity: post.animationController,
-      child: new Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: new InkWell(
-          onTap: () {
-            Navigator.of(context).push(new FullSlideTransitionRoute(
-              settings: const RouteSettings(),
-              builder: (_) =>
-              new PostPage(
-                post: post.post,
-                useLightTheme: widget.useLightTheme,
-                onThemeChanged: widget.onThemeChanged,
-                textScale: widget.fontSize,
+        .map(
+          (post) => new FadeTransition(
+            opacity: post.animationController,
+            child: new Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: new InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    new FullSlideTransitionRoute(
+                      settings: const RouteSettings(),
+                      builder: (_) => new PostPage(
+                        post: post.post,
+                        useLightTheme: widget.useLightTheme,
+                        onThemeChanged: widget.onThemeChanged,
+                        textScale: widget.fontSize,
+                      ),
+                    ),
+                  );
+                },
+                child: new Card(
+                  child: new Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: <Widget>[
+                      new PhotoHero(
+                        photo: post.post.imageUrl,
+                      ),
+                      new Container(
+                        decoration: new BoxDecoration(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        child: buildThemedText(
+                          post.post.title,
+                          const TextStyle(
+                            fontFamily: "Lobster",
+                            fontSize: 25.0,
+                          ),
+                          Theme.of(context).brightness,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            );
-          },
-          child: new Card(
-            child: new Stack(
-              alignment: Alignment.bottomLeft,
-              children: <Widget>[
-                new PhotoHero(
-                  photo: post.post.imageUrl,
-                ),
-                new Container(
-                  decoration: new BoxDecoration(
-                    color: Theme
-                        .of(context)
-                        .backgroundColor,
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: buildThemedText(
-                    post.post.title,
-                    const TextStyle(
-                      fontFamily: "Lobster",
-                      fontSize: 25.0,
-                    ),
-                    Theme
-                        .of(context)
-                        .brightness,
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
-      ),
-    ),
-    ).toList();
+        )
+        .toList();
   }
 
   @override
@@ -213,9 +195,8 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     return new Scaffold(
       key: _scaffoldKey,
       drawer: new MainDrawer(
-        title: CustomLocalizations
-            .of(context)
-            .title,
+        title: 'CustomLocalizations .of(context) .title,',
+        // TODO
         useLightTheme: widget.useLightTheme,
         onThemeChanged: widget.onThemeChanged,
         timeDilation: widget.timeDilation,
@@ -230,24 +211,17 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             floating: false,
             expandedHeight: _kFlexibleSpaceMaxHeight,
             flexibleSpace: new FlexibleSpaceBar(
-              title: buildThemedText(CustomLocalizations
-                  .of(context)
-                  .title,
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .title,
-                  Theme
-                      .of(context)
-                      .brightness),
+              title: buildThemedText(
+                  'CustomLocalizations  .of(context)      .title,', // TODO
+                  Theme.of(context).textTheme.title,
+                  Theme.of(context).brightness),
               background: new Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  new Image.asset(Theme
-                      .of(context)
-                      .brightness == Brightness.dark
-                      ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
-                      : 'images/header.jpg',
+                  new Image.asset(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
+                        : 'images/header.jpg',
                     fit: BoxFit.cover,
                     height: _kFlexibleSpaceMaxHeight,
                   ),
@@ -263,9 +237,8 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-
 class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
-  FullSlideTransitionRoute({ WidgetBuilder builder, RouteSettings settings })
+  FullSlideTransitionRoute({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   final Tween<Offset> _kBottomUpTween = new Tween<Offset>(
@@ -275,7 +248,7 @@ class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) =>
+          Animation<double> secondaryAnimation, Widget child) =>
       new SlideTransition(
           position: _kBottomUpTween.animate(
             new CurvedAnimation(
@@ -285,4 +258,3 @@ class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
           ),
           child: child);
 }
-

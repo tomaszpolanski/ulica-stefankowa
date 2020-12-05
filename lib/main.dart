@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:rxdart/transformers.dart';
 import 'package:ulicastefankowa/home/HomePage.dart';
-import 'package:ulicastefankowa/i18n/Localizations.dart';
 import 'package:ulicastefankowa/injection/Injector.dart';
 import 'package:ulicastefankowa/network/Prismic.dart';
 import 'package:ulicastefankowa/storage/Settings.dart';
-
 
 final ThemeData _kGalleryLightTheme = new ThemeData(
   brightness: Brightness.light,
@@ -44,16 +45,14 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState({this.settings});
 
-
   @override
   void initState() {
     _useLightTheme = settings.useLightTheme;
     timeDilation = _timeDilation = settings.timeDilation;
     _textScaleFactor = settings.textSize;
     readSettings();
-    _saveSettingsSubscription = _saveSettingsSubject
-        .stream
-        .debounce(new Duration(seconds: 1))
+    _saveSettingsSubscription = _saveSettingsSubject.stream
+        .debounce((_) => TimerStream(true, Duration(seconds: 1)))
         .listen((_) => settings.saveSettings());
     super.initState();
   }
@@ -79,13 +78,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       onGenerateTitle: (context) =>
-      CustomLocalizations
-          .of(context)
-          .title,
+          'CustomLocalizations.of(context).title,', // TODO
       localizationsDelegates: [
-        const CustomLocalizationsDelegate(),
-        PolishMaterialLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
         const Locale('en', ''),
@@ -112,7 +109,7 @@ class _MyAppState extends State<MyApp> {
               // that the checkbox in the drawer has started reacting, then we slam
               // on the brakes so that they see that the time is in fact now dilated.
               _timeDilationTimer =
-              new Timer(const Duration(milliseconds: 150), () {
+                  new Timer(const Duration(milliseconds: 150), () {
                 timeDilation = _timeDilation;
               });
             } else {
