@@ -142,7 +142,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context)!.push(
+                  Navigator.of(context)?.push(
                     FullSlideTransitionRoute<void>(
                       settings: const RouteSettings(),
                       builder: (_) => PostPage(
