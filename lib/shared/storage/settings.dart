@@ -34,9 +34,9 @@ class SettingsProvider {
 
 class Settings {
   const Settings({
-    this.version,
-    this.useLightTheme,
-    this.textSize,
+    required this.version,
+    required this.useLightTheme,
+    required this.textSize,
   });
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -52,8 +52,8 @@ class Settings {
   final double textSize;
 
   Settings copyWith({
-    final bool useLightTheme,
-    final double textSize,
+    final bool? useLightTheme,
+    final double? textSize,
   }) {
     return Settings(
       version: version,

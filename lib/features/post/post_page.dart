@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
@@ -8,13 +7,12 @@ import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({
-    Key key,
-    this.post,
-    this.useLightTheme,
-    @required this.onThemeChanged,
-    this.textScale,
-  })  : assert(onThemeChanged != null),
-        super(key: key);
+    Key? key,
+    required this.post,
+    required this.useLightTheme,
+    required this.onThemeChanged,
+    required this.textScale,
+  }) : super(key: key);
 
   final Post post;
   final bool useLightTheme;
@@ -27,7 +25,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
-  TextStyle _getStyle(String type, {@required TextStyle style}) {
+  TextStyle _getStyle(String? type, {required TextStyle style}) {
     switch (type) {
       case 'strong':
         return style.copyWith(fontWeight: FontWeight.bold);
@@ -39,7 +37,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
     }
   }
 
-  TextSpan _getSpan(ProperSpan span, {@required TextStyle style}) {
+  TextSpan _getSpan(ProperSpan span, {required TextStyle style}) {
     return TextSpan(text: span.text, style: _getStyle(span.type, style: style));
   }
 
@@ -50,16 +48,16 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(bottom: 16),
         child: PhotoHero(
           photo: widget.post.imageUrl,
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () => Navigator.of(context)!.pop(),
         ),
       )
     ];
     content.addAll(
       widget.post.text.map((it) => it is TextParagraph
           ? _buildTextParagraphs(
-              it.spans.map((span) => _getSpan(span, style: style)))
+              it.spans!.map((span) => _getSpan(span, style: style)))
           : it is ImageParagraph
-              ? _buildImageParagraphs(it.url)
+              ? _buildImageParagraphs(it.url!)
               : const SizedBox()),
     );
     return content;

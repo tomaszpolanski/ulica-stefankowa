@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class PhotoHero extends StatelessWidget {
-  const PhotoHero({Key key, this.photo, this.onTap}) : super(key: key);
+  const PhotoHero({
+    Key? key,
+    required this.photo,
+    this.onTap,
+  }) : super(key: key);
 
   final String photo;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

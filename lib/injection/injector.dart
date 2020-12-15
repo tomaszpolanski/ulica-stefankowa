@@ -9,7 +9,7 @@ abstract class Injector {
 }
 
 class InjectorImpl implements Injector {
-  InjectorImpl({@required this.environment})
+  InjectorImpl({required this.environment})
       :  prismic = PrismicImpl(environment);
 
   @override
@@ -22,14 +22,14 @@ class InjectorImpl implements Injector {
 class Injection extends InheritedWidget implements Injector {
   const Injection(
     Injector injector, {
-    @required Widget child,
-    Key key,
+    required Widget child,
+    Key? key,
   })  : _injector = injector,
         super(child: child, key: key);
 
   final Injector _injector;
 
-  static Injection of(BuildContext context) =>
+  static Injection? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Injection>();
 
   @override

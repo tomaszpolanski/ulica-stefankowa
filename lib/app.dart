@@ -23,18 +23,18 @@ final ThemeData _kGalleryDarkTheme = ThemeData(
 );
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Settings _settings;
+  late Settings _settings;
 
   final SettingsProvider settings = SettingsProvider();
   final PublishSubject<Settings> _saveSettingsSubject = PublishSubject();
-  StreamSubscription<Settings> _saveSettingsSubscription;
+  late StreamSubscription<Settings> _saveSettingsSubscription;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
       ],
       theme: _settings.useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme,
       home: HomePage(
-        prismic: Injection.of(context).prismic,
+        prismic: Injection.of(context)!.prismic,
         useLightTheme: _settings.useLightTheme,
         onThemeChanged: (bool value) {
           setState(() {
