@@ -96,10 +96,11 @@ class LinkTextSpan extends TextSpan {
 
   LinkTextSpan({TextStyle? style, required String url, String? text})
       : super(
-            style: style,
-            text: text ?? url,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                launch(url);
-              });
+          style: style,
+          text: text ?? url,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              launch(url);
+            },
+        );
 }
