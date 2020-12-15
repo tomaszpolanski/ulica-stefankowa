@@ -25,10 +25,12 @@ final ThemeData _kGalleryDarkTheme = ThemeData(
 
 void main() {
   final injector = InjectorImpl(environment: EnvImpl());
-  runApp(Injection(
-    injector,
-    child: const MyApp(),
-  ));
+  runApp(
+    Injection(
+      injector,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

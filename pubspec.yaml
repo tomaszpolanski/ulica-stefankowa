@@ -2,7 +2,7 @@ name: ulicastefankowa
 description: A new Flutter project.
 
 dependencies:
-  rxdart: ^0.24.1
+  rxdart: ^0.25.0
   url_launcher: ^5.7.10
   flusmic: 2.1.0
   flutter:
