@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/features/about/about_page.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
@@ -10,15 +9,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
-    Key key,
-    @required this.title,
-    this.useLightTheme,
-    @required this.onThemeChanged,
-    this.textScaleFactor,
-    this.onTextScaleFactorChanged,
-  })  : assert(title != null),
-        assert(onThemeChanged != null),
-        super(key: key);
+    Key? key,
+    required this.title,
+    required this.useLightTheme,
+    required this.onThemeChanged,
+    required this.textScaleFactor,
+    required this.onTextScaleFactorChanged,
+  }) : super(key: key);
 
   final String title;
 
@@ -71,7 +68,7 @@ class MainDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(AppLocalizations.of(context).aboutBlog),
-            onTap: () => Navigator.of(context).push(
+            onTap: () => Navigator.of(context)?.push(
               MaterialPageRoute<void>(
                 builder: (_) => const AboutPage(),
               ),
@@ -97,12 +94,13 @@ class LinkTextSpan extends TextSpan {
   // manage the recognizer from outside the TextSpan, e.g. in the State of a
   // stateful widget that then hands the recognizer to the TextSpan.
 
-  LinkTextSpan({TextStyle style, String url, String text})
+  LinkTextSpan({TextStyle? style, required String url, String? text})
       : super(
-            style: style,
-            text: text ?? url,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                launch(url);
-              });
+          style: style,
+          text: text ?? url,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              launch(url);
+            },
+        );
 }

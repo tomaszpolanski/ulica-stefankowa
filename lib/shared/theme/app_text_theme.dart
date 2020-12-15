@@ -10,51 +10,51 @@ class AppTextTheme {
   TextStyle get h1 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 36,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get h2 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 24,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get h3 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 18,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get h4 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 16,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get h5 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 14,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get h6 => TextStyle(
         fontFamily: 'OpenSans',
         fontSize: 12,
-        color: _textTheme.bodyText1.color,
+        color: _textTheme.bodyText1!.color,
         fontWeight: FontWeight.w700,
       );
 
-  TextStyle get paragraph => _textTheme.headline6.copyWith(
+  TextStyle get paragraph => _textTheme.headline6!.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w400,
       );
 
-  TextStyle get medium => _textTheme.headline6.copyWith(
+  TextStyle get medium => _textTheme.headline6!.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w400,
       );
@@ -65,5 +65,5 @@ class AppTextTheme {
       );
 
   TextStyle get post =>
-      _textTheme.headline6.copyWith(fontFamily: 'Serif', wordSpacing: 4);
+      _textTheme.headline6!.copyWith(fontFamily: 'Serif', wordSpacing: 4);
 }

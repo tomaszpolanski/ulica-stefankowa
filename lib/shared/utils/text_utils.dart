@@ -43,10 +43,10 @@ Color _forTheme(int i, String title, List<Color> colorList) {
 }
 
 class StefanText extends StatelessWidget {
-  const StefanText(this.data, {this.style, Key key}) : super(key: key);
+  const StefanText(this.data, {this.style, Key? key}) : super(key: key);
 
   final String data;
-  final TextStyle style;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {

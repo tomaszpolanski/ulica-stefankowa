@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:meta/meta.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
@@ -17,16 +16,13 @@ const double _kFlexibleSpaceMaxHeight = 230;
 
 class HomePage extends StatefulWidget {
   const HomePage({
-    Key key,
-    @required this.prismic,
-    this.useLightTheme,
-    @required this.onThemeChanged,
-    this.fontSize,
-    @required this.onFontSizeChanged,
-  })  : assert(prismic != null),
-        assert(onThemeChanged != null),
-        assert(onFontSizeChanged != null),
-        super(key: key);
+    Key? key,
+    required this.prismic,
+    required this.useLightTheme,
+    required this.onThemeChanged,
+    required this.fontSize,
+    required this.onFontSizeChanged,
+  }) : super(key: key);
 
   final Prismic prismic;
 
@@ -41,7 +37,10 @@ class HomePage extends StatefulWidget {
 }
 
 class PostCard {
-  PostCard({this.post, this.animationController});
+  PostCard({
+    required this.post,
+    required this.animationController,
+  });
 
   final Post post;
   final AnimationController animationController;
@@ -72,7 +71,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  Paragraph _getParagraph(dynamic paragraph) {
+  Paragraph? _getParagraph(dynamic paragraph) {
     if (paragraph['text'] != null) {
       final String text = '${paragraph['text']}\n';
       final spans = paragraph['spans']
@@ -89,7 +88,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Iterable<ProperSpan> _getSpan(List<Span> spans, String text) sync* {
-    num start = 0;
+    int start = 0;
     for (final span in spans) {
       if (span.start == start) {
         yield ProperSpan(
@@ -97,7 +96,9 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
         start = span.end;
       } else if (span.start != start) {
         yield ProperSpan(
-            text: text.substring(start, span.start - 1), type: 'normal');
+          text: text.substring(start, span.start - 1),
+          type: 'normal',
+        );
         start = span.start - 1;
         yield ProperSpan(
             text: text.substring(start, span.end), type: span.type);
@@ -105,7 +106,10 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
     }
     if (start <= text.length) {
-      yield ProperSpan(text: '${text.substring(start)}\n', type: 'normal');
+      yield ProperSpan(
+        text: '${text.substring(start)}\n',
+        type: 'normal',
+      );
     }
   }
 
@@ -138,7 +142,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context)?.push(
                     FullSlideTransitionRoute<void>(
                       settings: const RouteSettings(),
                       builder: (_) => PostPage(
@@ -194,7 +198,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             pinned: true,
             expandedHeight: _kFlexibleSpaceMaxHeight,
             leading: IconButton(
-              onPressed: () => _scaffoldKey.currentState.openDrawer(),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               icon: Icon(Icons.menu, color: Theme.of(context).accentColor),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -225,7 +229,8 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
 }
 
 class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
-  FullSlideTransitionRoute({WidgetBuilder builder, RouteSettings settings})
+  FullSlideTransitionRoute(
+      {required WidgetBuilder builder, RouteSettings? settings})
       : super(builder: builder, settings: settings);
 
   final Tween<Offset> _kBottomUpTween = Tween<Offset>(

@@ -1,23 +1,28 @@
 name: ulicastefankowa
-description: A new Flutter project.
+description: The app/webpage for ulica stefankowa
+
+environment:
+  sdk: '>=2.12.0-29.10.beta <3.0.0'
 
 dependencies:
-  rxdart: ^0.25.0
-  url_launcher: ^5.7.10
+  rxdart: ^0.26.0-nullsafety.0
+  url_launcher: ^6.0.0-nullsafety.1
   flusmic: 2.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.16.1
-  intl_translation: ^0.17.0
+  intl: ^0.17.0-nullsafety.2
   path_provider: ^1.6.24
-  http: ^0.12.2
+  equatable: ^2.0.0-nullsafety.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 flutter:
   generate: true
@@ -34,3 +39,4 @@ flutter:
     - family: Lobster
       fonts:
         - asset: fonts/Lobster-Regular.ttf
+
