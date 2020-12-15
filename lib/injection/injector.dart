@@ -9,9 +9,8 @@ abstract class Injector {
 }
 
 class InjectorImpl implements Injector {
-  InjectorImpl()
-      : environment = EnvImpl(),
-        prismic = PrismicImpl();
+  InjectorImpl({@required this.environment})
+      :  prismic = PrismicImpl(environment);
 
   @override
   final Env environment;

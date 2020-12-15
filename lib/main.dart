@@ -9,6 +9,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:ulicastefankowa/features/home/home_page.dart';
 import 'package:ulicastefankowa/injection/injector.dart';
+import 'package:ulicastefankowa/shared/security/environment.dart';
 import 'package:ulicastefankowa/shared/storage/settings.dart';
 
 final ThemeData _kGalleryLightTheme = ThemeData(
@@ -23,7 +24,7 @@ final ThemeData _kGalleryDarkTheme = ThemeData(
 );
 
 void main() {
-  final injector = InjectorImpl();
+  final injector = InjectorImpl(environment: EnvImpl());
   runApp(Injection(
     injector,
     child: const MyApp(),

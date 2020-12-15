@@ -67,9 +67,8 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> _fetch() async {
     final json = await widget.prismic.getPosts();
-    print(json);
     setState(() {
-      _posts = json['results'].map(_parsePost).map(_postCard).toList();
+      _posts = json.map(_parsePost).map(_postCard).toList();
     });
   }
 
@@ -77,7 +76,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (paragraph['text'] != null) {
       final String text = '${paragraph['text']}\n';
       final spans = paragraph['spans']
-          .map((dynamic it) =>
+          .map<Span>((dynamic it) =>
               Span(start: it['start'], end: it['end'], type: it['type']))
           .toList();
       return TextParagraph(
@@ -110,13 +109,12 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  Post _parsePost(dynamic post) {
-    final body = post['data'];
+  Post _parsePost(Map<String, dynamic> body) {
     final image = body['image']['url'];
     final title = body['title'].first['text'];
     final description = body['description'].first['text'];
     final text = body['text']
-        .map(_getParagraph)
+        .map<Paragraph>(_getParagraph)
         .where((dynamic it) => it != null)
         .toList();
     return Post(
