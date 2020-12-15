@@ -1,29 +1,44 @@
-import 'package:meta/meta.dart';
-import 'package:ulicastefankowa/network/Prismic.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:ulicastefankowa/shared/network/prismic.dart';
+import 'package:ulicastefankowa/shared/security/environment.dart';
 
+abstract class Injector {
+  Prismic get prismic;
 
-typedef Prismic PrismicFun();
+  Env get environment;
+}
 
-class Injector {
-  static final Injector _singleton = new Injector._internal();
-  static PrismicFun _prismicFun;
-  static Prismic _prismic;
+class InjectorImpl implements Injector {
+  InjectorImpl()
+      : environment = EnvImpl(),
+        prismic = PrismicImpl();
 
-  static void bind({ @required Prismic prismic()}) {
-    assert(prismic != null);
-    _prismicFun = prismic;
-  }
+  @override
+  final Env environment;
 
-  factory Injector() {
-    return _singleton;
-  }
+  @override
+  final Prismic prismic;
+}
 
-  Injector._internal();
+class Injection extends InheritedWidget implements Injector {
+  const Injection(
+    Injector injector, {
+    @required Widget child,
+    Key key,
+  })  : _injector = injector,
+        super(child: child, key: key);
 
-  Prismic get prismic {
-    if (_prismic == null) {
-      _prismic = _prismicFun();
-    }
-    return _prismic;
-  }
+  final Injector _injector;
+
+  static Injection of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<Injection>();
+
+  @override
+  Env get environment => _injector.environment;
+
+  @override
+  Prismic get prismic => _injector.prismic;
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 }

@@ -1,130 +1,105 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:rxdart/transformers.dart';
-import 'package:ulicastefankowa/home/HomePage.dart';
-import 'package:ulicastefankowa/injection/Injector.dart';
-import 'package:ulicastefankowa/network/Prismic.dart';
-import 'package:ulicastefankowa/storage/Settings.dart';
+import 'package:ulicastefankowa/features/home/home_page.dart';
+import 'package:ulicastefankowa/injection/injector.dart';
+import 'package:ulicastefankowa/shared/storage/settings.dart';
 
-final ThemeData _kGalleryLightTheme = new ThemeData(
+final ThemeData _kGalleryLightTheme = ThemeData(
   brightness: Brightness.light,
   primarySwatch: Colors.orange,
   primaryColor: Colors.white,
 );
 
-final ThemeData _kGalleryDarkTheme = new ThemeData(
+final ThemeData _kGalleryDarkTheme = ThemeData(
   brightness: Brightness.dark,
   primarySwatch: Colors.orange,
 );
 
 void main() {
-  Injector.bind(prismic: () => new PrismicImpl());
-  runApp(new MyApp());
+  final injector = InjectorImpl();
+  runApp(Injection(
+    injector,
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
-  _MyAppState createState() => new _MyAppState(settings: new Settings());
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _useLightTheme;
-  double _timeDilation;
-  double _textScaleFactor;
-  Timer _timeDilationTimer;
+  Settings _settings;
 
-  Settings settings;
-  final PublishSubject<Null> _saveSettingsSubject = new PublishSubject();
-  StreamSubscription _saveSettingsSubscription;
-
-  _MyAppState({this.settings});
+  final SettingsProvider settings = SettingsProvider();
+  final PublishSubject<Settings> _saveSettingsSubject = PublishSubject();
+  StreamSubscription<Settings> _saveSettingsSubscription;
 
   @override
   void initState() {
-    _useLightTheme = settings.useLightTheme;
-    timeDilation = _timeDilation = settings.timeDilation;
-    _textScaleFactor = settings.textSize;
+    _settings = settings.initial;
     readSettings();
     _saveSettingsSubscription = _saveSettingsSubject.stream
-        .debounce((_) => TimerStream(true, Duration(seconds: 1)))
-        .listen((_) => settings.saveSettings());
+        .debounce((_) => TimerStream(true, const Duration(seconds: 1)))
+        .listen(settings.saveSettings);
     super.initState();
   }
 
-  Future readSettings() async {
-    await settings.readSettings();
+  Future<void> readSettings() async {
+    final s = await settings.readSettings();
     setState(() {
-      _useLightTheme = settings.useLightTheme;
-      timeDilation = _timeDilation = settings.timeDilation;
-      _textScaleFactor = settings.textSize;
+      _settings = s;
     });
   }
 
   @override
   void dispose() {
-    _timeDilationTimer?.cancel();
-    _timeDilationTimer = null;
     _saveSettingsSubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      onGenerateTitle: (context) =>
-          'CustomLocalizations.of(context).title,', // TODO
-      localizationsDelegates: [
+    return MaterialApp(
+      onGenerateTitle: (c) => AppLocalizations.of(c).title,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''),
-        const Locale('pl', ''),
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('pl', ''),
       ],
-      theme: (_useLightTheme ? _kGalleryLightTheme : _kGalleryDarkTheme),
-      home: new HomePage(
-        prismic: new Injector().prismic,
-        useLightTheme: _useLightTheme,
+      theme: _settings.useLightTheme == true
+          ? _kGalleryLightTheme
+          : _kGalleryDarkTheme,
+      home: HomePage(
+        prismic: Injection.of(context).prismic,
+        useLightTheme: _settings.useLightTheme,
         onThemeChanged: (bool value) {
           setState(() {
-            _useLightTheme = settings.useLightTheme = value;
+            _settings = _settings.copyWith(useLightTheme: value);
           });
-          _saveSettingsSubject.add(null);
+          _saveSettingsSubject.add(_settings);
         },
-        timeDilation: _timeDilation,
-        onTimeDilationChanged: (double value) {
-          setState(() {
-            _timeDilationTimer?.cancel();
-            _timeDilationTimer = null;
-            _timeDilation = settings.timeDilation = value;
-            if (_timeDilation > 1.0) {
-              // We delay the time dilation change long enough that the user can see
-              // that the checkbox in the drawer has started reacting, then we slam
-              // on the brakes so that they see that the time is in fact now dilated.
-              _timeDilationTimer =
-                  new Timer(const Duration(milliseconds: 150), () {
-                timeDilation = _timeDilation;
-              });
-            } else {
-              timeDilation = _timeDilation;
-            }
-          });
-          _saveSettingsSubject.add(null);
-        },
-        fontSize: _textScaleFactor,
+        fontSize: _settings.textSize,
         onFontSizeChanged: (double value) {
           setState(() {
-            _textScaleFactor = settings.textSize = value;
+            _settings = _settings.copyWith(textSize: value);
           });
 
-          _saveSettingsSubject.add(null);
+          _saveSettingsSubject.add(_settings);
         },
       ),
     );
