@@ -48,16 +48,16 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(bottom: 16),
         child: PhotoHero(
           photo: widget.post.imageUrl,
-          onTap: () => Navigator.of(context)!.pop(),
+          onTap: () => Navigator.of(context)?.pop(),
         ),
       )
     ];
     content.addAll(
       widget.post.text.map((it) => it is TextParagraph
           ? _buildTextParagraphs(
-              it.spans!.map((span) => _getSpan(span, style: style)))
+              it.spans.map((span) => _getSpan(span, style: style)))
           : it is ImageParagraph
-              ? _buildImageParagraphs(it.url!)
+              ? _buildImageParagraphs(it.url)
               : const SizedBox()),
     );
     return content;
