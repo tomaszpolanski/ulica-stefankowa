@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
-
-import 'file:///C:/Users/tpolanski/Documents/GitHub/ulica-stefankowa/lib/features/drawer/main_drawer.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key key}) : super(key: key);
