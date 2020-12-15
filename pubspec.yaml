@@ -1,5 +1,8 @@
 name: ulicastefankowa
-description: A new Flutter project.
+description: The app/webpage for ulica stefankowa
+
+environment:
+  sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
   rxdart: ^0.25.0
@@ -13,6 +16,7 @@ dependencies:
   intl_translation: ^0.17.0
   path_provider: ^1.6.24
   http: ^0.12.2
+  equatable: ^1.2.5
 
 
 dev_dependencies:
