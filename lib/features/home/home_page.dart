@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
-import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/features/post/post_page.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
@@ -43,7 +42,7 @@ class PostCard {
     required this.animationController,
   });
 
-  final Post post;
+  final BasicPost post;
   final AnimationController animationController;
 }
 
@@ -66,67 +65,13 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future<void> _fetch() async {
-    final json = await widget.prismic.getPosts();
+    final posts = await widget.prismic.fetchPosts();
     setState(() {
-      _posts = json.map(_parsePost).map(_postCard).toList();
+      _posts = posts.map(_postCard).toList();
     });
   }
 
-  Paragraph? _getParagraph(dynamic paragraph) {
-    if (paragraph['text'] != null) {
-      final String text = '${paragraph['text']}\n';
-      final spans = paragraph['spans']
-          .map<Span>((dynamic it) =>
-              Span(start: it['start'], end: it['end'], type: it['type']))
-          .toList();
-      return TextParagraph(
-          text: paragraph['text'], spans: _getSpan(spans, text).toList());
-    } else if (paragraph['url'] != null) {
-      return ImageParagraph(url: paragraph['url']);
-    } else {
-      return null;
-    }
-  }
-
-  Iterable<ProperSpan> _getSpan(List<Span> spans, String text) sync* {
-    int start = 0;
-    for (final span in spans) {
-      if (span.start == start) {
-        yield ProperSpan(
-            text: text.substring(span.start, span.end), type: span.type);
-        start = span.end;
-      } else if (span.start != start) {
-        yield ProperSpan(
-          text: text.substring(start, span.start - 1),
-          type: 'normal',
-        );
-        start = span.start - 1;
-        yield ProperSpan(
-            text: text.substring(start, span.end), type: span.type);
-        start = span.end;
-      }
-    }
-    if (start <= text.length) {
-      yield ProperSpan(
-        text: '${text.substring(start)}\n',
-        type: 'normal',
-      );
-    }
-  }
-
-  Post _parsePost(Map<String, dynamic> body) {
-    final image = body['image']['url'];
-    final title = body['title'].first['text'];
-    final description = body['description'].first['text'];
-    final text = body['text']
-        .map<Paragraph>(_getParagraph)
-        .where((dynamic it) => it != null)
-        .toList();
-    return Post(
-        title: title, imageUrl: image, description: description, text: text);
-  }
-
-  PostCard _postCard(dynamic post) {
+  PostCard _postCard(BasicPost post) {
     final animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -147,7 +92,9 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
                     FullSlideTransitionRoute<void>(
                       settings: const RouteSettings(),
                       builder: (_) => PostPage(
-                        post: post.post,
+                        postId: post.post.id,
+                        title: post.post.title,
+                        image: post.post.imageUrl,
                         useLightTheme: widget.useLightTheme,
                         onThemeChanged: widget.onThemeChanged,
                         textScale: widget.fontSize,

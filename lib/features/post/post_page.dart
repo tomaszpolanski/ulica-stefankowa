@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
+import 'package:ulicastefankowa/injection/injector.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
@@ -8,13 +9,17 @@ import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 class PostPage extends StatefulWidget {
   const PostPage({
     Key? key,
-    required this.post,
+    required this.postId,
+    required this.title,
+    required this.image,
     required this.useLightTheme,
     required this.onThemeChanged,
     required this.textScale,
   }) : super(key: key);
 
-  final Post post;
+  final String postId;
+  final String title;
+  final String image;
   final bool useLightTheme;
   final ValueChanged<bool> onThemeChanged;
 
@@ -50,7 +55,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
           SliverAppBar(
             floating: true,
             title: StefanText(
-              widget.post.title,
+              widget.title,
               style: AppTextTheme.of(context).s1,
             ),
             actions: <Widget>[
@@ -64,28 +69,41 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: PhotoHero(
-                photo: widget.post.imageUrl,
+                photo: widget.image,
                 onTap: () => Navigator.of(context)?.pop(),
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, int index) {
-                final paragraph = widget.post.text[index];
-                if (paragraph is TextParagraph) {
-                  return TextParagraphWidget(
-                    paragraph.spans
-                        .map((span) => _getSpan(span, style: style))
-                        .toList(growable: false),
-                  );
-                } else if (paragraph is ImageParagraph) {
-                  return ImageParagraphWidget(paragraph.url);
-                }
-                return null;
-              },
-              childCount: widget.post.text.length,
-            ),
+          FutureBuilder<DetailPost>(
+            future:
+                Injection.of(context)!.prismic.fetchPostDetails(widget.postId),
+            builder: (context, snapshot) {
+              final data = snapshot.data;
+              if (data != null) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, int index) {
+                      final paragraph = data.text[index];
+                      if (paragraph is TextParagraph) {
+                        return TextParagraphWidget(
+                          paragraph.spans
+                              .map((span) => _getSpan(span, style: style))
+                              .toList(growable: false),
+                        );
+                      } else if (paragraph is ImageParagraph) {
+                        return ImageParagraphWidget(paragraph.url);
+                      }
+                      return null;
+                    },
+                    childCount: data.text.length,
+                  ),
+                );
+              } else {
+                return const SliverToBoxAdapter(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
         ],
       ),
