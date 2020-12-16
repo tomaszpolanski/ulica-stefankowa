@@ -65,6 +65,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (c) => AppLocalizations.of(c).title,
+      navigatorObservers: <NavigatorObserver>[
+        ...?Injection.of(context)?.routeObservers,
+      ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

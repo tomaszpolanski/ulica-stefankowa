@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:ulicastefankowa/app.dart';
-import 'package:ulicastefankowa/injection/injector.dart';
-import 'package:ulicastefankowa/shared/security/environment.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'dart:io';
 
-void main() {
-  final injector = InjectorImpl(environment: EnvImpl());
-  runApp(
-    Injection(
-      injector,
-      child: const MyApp(),
-    ),
-  );
+import 'package:flutter/foundation.dart';
+import 'package:ulicastefankowa/main_desktop.dart' as desktop;
+import 'package:ulicastefankowa/main_mobile.dart' as mobile;
+
+Future<void> main() async {
+  if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+    return mobile.main();
+  } else {
+    return desktop.main();
+  }
 }
