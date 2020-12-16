@@ -85,13 +85,23 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
                     (context, int index) {
                       final paragraph = data.text[index];
                       if (paragraph is TextParagraph) {
-                        return TextParagraphWidget(
-                          paragraph.spans
-                              .map((span) => _getSpan(span, style: style))
-                              .toList(growable: false),
+                        return Align(
+                          child: SizedBox(
+                            width: 720,
+                            child: TextParagraphWidget(
+                              paragraph.spans
+                                  .map((span) => _getSpan(span, style: style))
+                                  .toList(growable: false),
+                            ),
+                          ),
                         );
                       } else if (paragraph is ImageParagraph) {
-                        return ImageParagraphWidget(paragraph.url);
+                        return Align(
+                          child: SizedBox(
+                            width: 720,
+                            child: ImageParagraphWidget(paragraph.url),
+                          ),
+                        );
                       }
                       return null;
                     },
