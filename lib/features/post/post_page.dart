@@ -41,53 +41,9 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
     return TextSpan(text: span.text, style: _getStyle(span.type, style: style));
   }
 
-  List<Widget> _getWidgets() {
-    final style = AppTextTheme.of(context).post;
-    List<Widget> content = [
-      Container(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: PhotoHero(
-          photo: widget.post.imageUrl,
-          onTap: () => Navigator.of(context)?.pop(),
-        ),
-      )
-    ];
-    content.addAll(
-      widget.post.text.map((it) => it is TextParagraph
-          ? _buildTextParagraphs(
-              it.spans.map((span) => _getSpan(span, style: style)))
-          : it is ImageParagraph
-              ? _buildImageParagraphs(it.url)
-              : const SizedBox()),
-    );
-    return content;
-  }
-
-  Widget _buildTextParagraphs(Iterable<TextSpan> spans) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: RichText(
-        textAlign: TextAlign.justify,
-        text: TextSpan(
-          children: spans.toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageParagraphs(String image) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: FadeInImage.assetNetwork(
-        image: image,
-        placeholder: 'images/header.jpg',
-        fit: BoxFit.contain,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final style = AppTextTheme.of(context).post;
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -104,8 +60,71 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
               ),
             ],
           ),
-          SliverList(delegate: SliverChildListDelegate(_getWidgets())),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: PhotoHero(
+                photo: widget.post.imageUrl,
+                onTap: () => Navigator.of(context)?.pop(),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, int index) {
+                final paragraph = widget.post.text[index];
+                if (paragraph is TextParagraph) {
+                  return TextParagraphWidget(
+                    paragraph.spans
+                        .map((span) => _getSpan(span, style: style))
+                        .toList(growable: false),
+                  );
+                } else if (paragraph is ImageParagraph) {
+                  return ImageParagraphWidget(paragraph.url);
+                }
+                return null;
+              },
+              childCount: widget.post.text.length,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class TextParagraphWidget extends StatelessWidget {
+  const TextParagraphWidget(this.spans, {Key? key}) : super(key: key);
+
+  final List<TextSpan> spans;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: RichText(
+        textAlign: TextAlign.justify,
+        text: TextSpan(
+          children: spans,
+        ),
+      ),
+    );
+  }
+}
+
+class ImageParagraphWidget extends StatelessWidget {
+  const ImageParagraphWidget(this.image, {Key? key}) : super(key: key);
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: FadeInImage.assetNetwork(
+        image: image,
+        placeholder: 'images/header.jpg',
+        fit: BoxFit.contain,
       ),
     );
   }
