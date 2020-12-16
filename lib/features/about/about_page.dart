@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';

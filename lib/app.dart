@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/streams.dart';

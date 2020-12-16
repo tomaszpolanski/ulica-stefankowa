@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flusmic/flusmic.dart';
 import 'package:ulicastefankowa/shared/security/environment.dart';
 
