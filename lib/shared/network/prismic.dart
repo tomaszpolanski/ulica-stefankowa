@@ -1,12 +1,14 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flusmic/flusmic.dart';
+import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/shared/security/environment.dart';
 
 const String _kEndpoint = 'https://ulicastefankowa.prismic.io/api/v2';
 
-// ignore: one_member_abstracts
 abstract class Prismic {
-  Future<List<Map<String, dynamic>>> getPosts();
+  Future<List<BasicPost>> fetchPosts();
+
+  Future<DetailPost> fetchPostDetails(String id);
 }
 
 class PrismicImpl extends Prismic {
@@ -19,8 +21,18 @@ class PrismicImpl extends Prismic {
   final Flusmic flusmic;
 
   @override
-  Future<List<Map<String, dynamic>>> getPosts() async {
-    final response = await flusmic.getRootDocument();
-    return response.results.map((e) => e.data).toList();
+  Future<List<BasicPost>> fetchPosts() async {
+    final response = await flusmic.query([], fetch: [
+      CustomPredicatePath('post', 'id', fetch: true),
+      CustomPredicatePath('post', 'title', fetch: true),
+      CustomPredicatePath('post', 'image', fetch: true),
+    ]);
+    return response.results.map((e) => BasicPost.fromJson(e)).toList();
+  }
+
+  @override
+  Future<DetailPost> fetchPostDetails(String id) async {
+    final response = await flusmic.getDocumentById(id);
+    return DetailPost.fromJson(response.results.single.data);
   }
 }
