@@ -16,7 +16,8 @@ jobs:
           channel: ${{ matrix.channel }}
       - name: Install dependencies
         run: flutter packages get
-
+        
+      - run: flutter config --enable-web
       - name: Build
         run: flutter build web --release --no-sound-null-safety --dart-define=STEFAN_PRISMIC=${{ secrets.STEFAN_PRISMIC }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
