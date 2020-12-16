@@ -84,42 +84,45 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
         .map(
           (post) => FadeTransition(
             opacity: post.animationController,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context)?.push(
-                    FullSlideTransitionRoute<void>(
-                      settings: const RouteSettings(),
-                      builder: (_) => PostPage(
-                        postId: post.post.id,
-                        title: post.post.title,
-                        image: post.post.imageUrl,
-                        useLightTheme: widget.useLightTheme,
-                        onThemeChanged: widget.onThemeChanged,
-                        textScale: widget.fontSize,
+            child: Align(
+              child: Container(
+                width: 720,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context)?.push(
+                      FullSlideTransitionRoute<void>(
+                        settings: const RouteSettings(),
+                        builder: (_) => PostPage(
+                          postId: post.post.id,
+                          title: post.post.title,
+                          image: post.post.imageUrl,
+                          useLightTheme: widget.useLightTheme,
+                          onThemeChanged: widget.onThemeChanged,
+                          textScale: widget.fontSize,
+                        ),
                       ),
+                    );
+                  },
+                  child: Card(
+                    child: Stack(
+                      alignment: Alignment.bottomLeft,
+                      children: <Widget>[
+                        PhotoHero(
+                          photo: post.post.imageUrl,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).backgroundColor,
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: StefanText(
+                            post.post.title,
+                            style: AppTextTheme.of(context).s1,
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-                child: Card(
-                  child: Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: <Widget>[
-                      PhotoHero(
-                        photo: post.post.imageUrl,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: StefanText(
-                          post.post.title,
-                          style: AppTextTheme.of(context).s1,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ),
