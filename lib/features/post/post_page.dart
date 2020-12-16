@@ -48,7 +48,9 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final style = AppTextTheme.of(context).post;
+    final style = AppTextTheme.of(context).post.copyWith(
+          fontSize: widget.textScale,
+        );
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[

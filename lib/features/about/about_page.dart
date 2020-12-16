@@ -67,55 +67,59 @@ class AboutPage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            children: <Widget>[
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      style:
-                          aboutTextStyle.copyWith(fontStyle: FontStyle.italic),
-                      text: AppLocalizations.of(context).aboutText,
-                    ),
-                  ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          child: Container(
+            width: 720,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              children: <Widget>[
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        style: aboutTextStyle.copyWith(
+                            fontStyle: FontStyle.italic),
+                        text: AppLocalizations.of(context).aboutText,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 100,
-                      width: 100,
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage('images/aga.jpg'),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 18),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 100,
+                        width: 100,
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage('images/aga.jpg'),
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      'Agnieszka Jakubas',
-                      textAlign: TextAlign.left,
-                      style:
-                          aboutTextStyle.copyWith(fontStyle: FontStyle.italic),
-                    ),
-                    Text(
-                      'agnieszka.jakubas@ulicastefankowa.pl',
-                      textAlign: TextAlign.left,
-                      style:
-                          aboutTextStyle.copyWith(fontStyle: FontStyle.italic),
-                    ),
-                  ],
+                      Text(
+                        'Agnieszka Jakubas',
+                        textAlign: TextAlign.left,
+                        style: aboutTextStyle.copyWith(
+                            fontStyle: FontStyle.italic),
+                      ),
+                      Text(
+                        'agnieszka.jakubas@ulicastefankowa.pl',
+                        textAlign: TextAlign.left,
+                        style: aboutTextStyle.copyWith(
+                            fontStyle: FontStyle.italic),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
