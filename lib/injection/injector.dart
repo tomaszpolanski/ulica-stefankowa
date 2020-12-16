@@ -1,7 +1,4 @@
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_analytics/firebase_analytics.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/security/environment.dart';
@@ -17,9 +14,8 @@ abstract class Injector {
 class InjectorImpl implements Injector {
   InjectorImpl({
     required this.environment,
-    required FirebaseAnalytics analytics,
-  })   : prismic = PrismicImpl(environment),
-        routeObservers = [FirebaseAnalyticsObserver(analytics: analytics)];
+    required this.routeObservers,
+  }) : prismic = PrismicImpl(environment);
 
   @override
   final Env environment;
