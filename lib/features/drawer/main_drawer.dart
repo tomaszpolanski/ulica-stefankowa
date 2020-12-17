@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ulicastefankowa/features/about/about_page.dart';
+import 'package:ulicastefankowa/shared/navigation/app_router.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,6 +15,7 @@ class MainDrawer extends StatelessWidget {
     required this.onThemeChanged,
     required this.textScaleFactor,
     required this.onTextScaleFactorChanged,
+    required this.onPageChanged,
   }) : super(key: key);
 
   final bool useLightTheme;
@@ -22,6 +23,7 @@ class MainDrawer extends StatelessWidget {
 
   final double textScaleFactor;
   final ValueChanged<double> onTextScaleFactorChanged;
+  final ValueChanged<AppRoutePath> onPageChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +69,9 @@ class MainDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(AppLocalizations.of(context)!.aboutBlog),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const AboutPage(),
-              ),
-            ),
+            onTap: () {
+              onPageChanged(const AboutRoutePath());
+            },
           )
         ],
       ),

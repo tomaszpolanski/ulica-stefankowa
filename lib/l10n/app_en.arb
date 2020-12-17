@@ -46,5 +46,9 @@
     "aboutBlog": "About",
     "@aboutBlog": {
         "description": "About button text"
+    },
+    "notFound": "We did not find \nthis page",
+    "@notFound": {
+        "description": "Message for missing page"
     }
 }

@@ -10,6 +10,20 @@ import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
+class PostRouterPage extends Page<void> {
+  PostRouterPage(this.id) : super(key: ValueKey(id));
+
+  final String id;
+
+  @override
+  Route<void> createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (BuildContext context) => PostPage(postId: id),
+    );
+  }
+}
+
 class PostPage extends StatefulWidget {
   const PostPage({
     Key? key,
