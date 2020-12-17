@@ -18,7 +18,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: StefanText(
-          AppLocalizations.of(context).aboutBlog,
+          AppLocalizations.of(context)!.aboutBlog,
           style: AppTextTheme.of(context).s1,
         ),
         actions: <Widget>[
@@ -32,7 +32,7 @@ class AboutPage extends StatelessWidget {
                   height: 100,
                   fit: BoxFit.cover,
                 ),
-                applicationLegalese: AppLocalizations.of(context).appCopy,
+                applicationLegalese: AppLocalizations.of(context)!.appCopy,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
@@ -41,7 +41,7 @@ class AboutPage extends StatelessWidget {
                         children: <TextSpan>[
                           TextSpan(
                             style: aboutTextStyle,
-                            text: AppLocalizations.of(context).appDescription,
+                            text: AppLocalizations.of(context)!.appDescription,
                           ),
                           LinkTextSpan(
                             style: linkStyle,
@@ -49,12 +49,12 @@ class AboutPage extends StatelessWidget {
                           ),
                           TextSpan(
                             style: aboutTextStyle,
-                            text: AppLocalizations.of(context).appSourceCode,
+                            text: AppLocalizations.of(context)!.appSourceCode,
                           ),
                           LinkTextSpan(
                             style: linkStyle,
                             url: 'https://goo.gl/cYD8Dq',
-                            text: AppLocalizations.of(context).appRepoLink,
+                            text: AppLocalizations.of(context)!.appRepoLink,
                           ),
                           TextSpan(style: aboutTextStyle, text: '.'),
                         ],
@@ -82,7 +82,7 @@ class AboutPage extends StatelessWidget {
                       TextSpan(
                         style: aboutTextStyle.copyWith(
                             fontStyle: FontStyle.italic),
-                        text: AppLocalizations.of(context).aboutText,
+                        text: AppLocalizations.of(context)!.aboutText,
                       ),
                     ],
                   ),

@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, Settings>(
       builder: (context, settings) => MaterialApp(
-        onGenerateTitle: (c) => AppLocalizations.of(c).title,
+        onGenerateTitle: (c) => AppLocalizations.of(c)!.title,
         navigatorObservers: <NavigatorObserver>[
           ...widget.injector.routeObservers,
         ],

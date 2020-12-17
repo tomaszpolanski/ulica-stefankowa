@@ -148,7 +148,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
           );
         },
         builder: (context, value, onChanged) => MainDrawer(
-          title: AppLocalizations.of(context).title,
+          title: AppLocalizations.of(context)!.title,
           useLightTheme:
               BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
           onThemeChanged: (bool light) {
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             flexibleSpace: FlexibleSpaceBar(
               title: StefanText(
-                AppLocalizations.of(context).title,
+                AppLocalizations.of(context)!.title,
                 style: AppTextTheme.of(context).s1,
               ),
               background: Stack(
