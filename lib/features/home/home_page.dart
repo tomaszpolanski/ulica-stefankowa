@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
-import 'package:ulicastefankowa/features/post/post_page.dart';
+import 'package:ulicastefankowa/shared/navigation/app_router.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
@@ -22,22 +22,14 @@ class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
     required this.prismic,
-    required this.useLightTheme,
-    required this.onThemeChanged,
-    required this.fontSize,
-    required this.onFontSizeChanged,
+    required this.onPageChanged,
   }) : super(key: key);
 
   final Prismic prismic;
-
-  final bool useLightTheme;
-  final ValueChanged<bool> onThemeChanged;
-
-  final double fontSize;
-  final ValueChanged<double> onFontSizeChanged;
+  final ValueChanged<AppRoutePath> onPageChanged;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class PostCard {
@@ -50,7 +42,7 @@ class PostCard {
   final AnimationController animationController;
 }
 
-class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
 
@@ -70,9 +62,11 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> _fetch() async {
     final posts = await widget.prismic.fetchPosts();
-    setState(() {
-      _posts = posts.map(_postCard).toList();
-    });
+    if (mounted) {
+      setState(() {
+        _posts = posts.map(_postCard).toList();
+      });
+    }
   }
 
   PostCard _postCard(BasicPost post) {
@@ -110,6 +104,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
           },
           textScaleFactor: value,
           onTextScaleFactorChanged: onChanged,
+          onPageChanged: widget.onPageChanged,
         ),
       ),
       body: CustomScrollView(
@@ -143,7 +138,12 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, int index) => PostCardItem(_posts[index]),
+              (context, int index) => PostCardItem(
+                _posts[index],
+                onSelected: (id) {
+                  widget.onPageChanged(PostRoutePath(id));
+                },
+              ),
               childCount: _posts.length,
             ),
           ),
@@ -154,9 +154,15 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
 }
 
 class PostCardItem extends StatelessWidget {
-  const PostCardItem(this.post, {Key? key}) : super(key: key);
+  const PostCardItem(
+    this.post, {
+    required this.onSelected,
+    Key? key,
+  }) : super(key: key);
 
   final PostCard post;
+
+  final ValueChanged<String> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -167,16 +173,7 @@ class PostCardItem extends StatelessWidget {
           width: 720,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                FullSlideTransitionRoute<void>(
-                  settings: const RouteSettings(),
-                  builder: (_) => PostPage(
-                    postId: post.post.id,
-                  ),
-                ),
-              );
-            },
+            onTap: () => onSelected(post.post.id),
             child: Card(
               child: Stack(
                 alignment: Alignment.bottomLeft,

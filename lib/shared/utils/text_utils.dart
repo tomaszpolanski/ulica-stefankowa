@@ -47,12 +47,14 @@ class StefanText extends StatelessWidget {
     this.data, {
     this.style,
     this.maxLines,
+    this.textAlign = TextAlign.start,
     Key? key,
   }) : super(key: key);
 
   final String data;
   final TextStyle? style;
   final int? maxLines;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,7 @@ class StefanText extends StatelessWidget {
     return RichText(
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
+      textAlign: textAlign,
       text: TextSpan(
         children: _getColoredTextSpans(
                 style ?? DefaultTextStyle.of(context).style,
