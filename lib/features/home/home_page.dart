@@ -148,7 +148,6 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
           );
         },
         builder: (context, value, onChanged) => MainDrawer(
-          title: AppLocalizations.of(context)!.title,
           useLightTheme:
               BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
           onThemeChanged: (bool light) {
