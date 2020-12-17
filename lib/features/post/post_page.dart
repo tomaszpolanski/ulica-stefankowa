@@ -14,13 +14,9 @@ class PostPage extends StatefulWidget {
   const PostPage({
     Key? key,
     required this.postId,
-    required this.title,
-    required this.image,
   }) : super(key: key);
 
   final String postId;
-  final String title;
-  final String image;
 
   @override
   _PostPageState createState() => _PostPageState();
@@ -45,43 +41,45 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            title: StefanText(
-              widget.title,
-              style: AppTextTheme.of(context).s1,
-            ),
-            actions: <Widget>[
-              BlocBuilder<SettingsBloc, Settings>(
-                builder: (context, settings) => IconButton(
-                  icon: const Icon(Icons.visibility),
-                  onPressed: () {
-                    BlocProvider.of<SettingsBloc>(context).save(settings
-                        .copyWith(useLightTheme: !settings.useLightTheme));
-                  },
+    return FutureBuilder<DetailPost>(
+      future: Injection.of(context)!.prismic.fetchPostDetails(widget.postId),
+      builder: (context, snapshot) {
+        final data = snapshot.data;
+        if (data != null) {
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  floating: true,
+                  title: StefanText(
+                    data.title,
+                    style: AppTextTheme.of(context).s1,
+                  ),
+                  actions: <Widget>[
+                    BlocBuilder<SettingsBloc, Settings>(
+                      builder: (context, settings) => IconButton(
+                        icon: const Icon(Icons.visibility),
+                        onPressed: () {
+                          BlocProvider.of<SettingsBloc>(context).save(
+                            settings.copyWith(
+                              useLightTheme: !settings.useLightTheme,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: PhotoHero(
-                photo: widget.image,
-                onTap: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
-          FutureBuilder<DetailPost>(
-            future:
-                Injection.of(context)!.prismic.fetchPostDetails(widget.postId),
-            builder: (context, snapshot) {
-              final data = snapshot.data;
-              if (data != null) {
-                return BlocBuilder<SettingsBloc, Settings>(
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: PhotoHero(
+                      photo: data.imageUrl,
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
+                BlocBuilder<SettingsBloc, Settings>(
                   builder: (context, settings) {
                     final style = AppTextTheme.of(context).post.copyWith(
                           fontSize: settings.textSize,
@@ -116,17 +114,17 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
                       ),
                     );
                   },
-                );
-              } else {
-                return const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-            },
-          ),
-        ],
-      ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Container(
+            color: Colors.white,
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
     );
   }
 }

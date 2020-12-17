@@ -83,56 +83,6 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
     return PostCard(post: post, animationController: animationController);
   }
 
-  List<Widget> buildItem(List<PostCard> posts) {
-    return posts
-        .map(
-          (post) => FadeTransition(
-            opacity: post.animationController,
-            child: Align(
-              child: Container(
-                width: 720,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      FullSlideTransitionRoute<void>(
-                        settings: const RouteSettings(),
-                        builder: (_) => PostPage(
-                          postId: post.post.id,
-                          title: post.post.title,
-                          image: post.post.imageUrl,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    child: Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: <Widget>[
-                        PhotoHero(
-                          photo: post.post.imageUrl,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: StefanText(
-                            post.post.title,
-                            style: AppTextTheme.of(context).s1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,8 +141,64 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          SliverList(delegate: SliverChildListDelegate(buildItem(_posts))),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, int index) => PostCardItem(_posts[index]),
+              childCount: _posts.length,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class PostCardItem extends StatelessWidget {
+  const PostCardItem(this.post, {Key? key}) : super(key: key);
+
+  final PostCard post;
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: post.animationController,
+      child: Align(
+        child: Container(
+          width: 720,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                FullSlideTransitionRoute<void>(
+                  settings: const RouteSettings(),
+                  builder: (_) => PostPage(
+                    postId: post.post.id,
+                  ),
+                ),
+              );
+            },
+            child: Card(
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: <Widget>[
+                  PhotoHero(
+                    photo: post.post.imageUrl,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).backgroundColor,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: StefanText(
+                      post.post.title,
+                      style: AppTextTheme.of(context).s1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
