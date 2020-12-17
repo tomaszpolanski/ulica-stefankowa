@@ -173,17 +173,7 @@ class PostCardItem extends StatelessWidget {
           width: 720,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: InkWell(
-            onTap: () {
-              onSelected(post.post.id);
-              // Navigator.of(context).push(
-              //   FullSlideTransitionRoute<void>(
-              //     settings: const RouteSettings(),
-              //     builder: (_) => PostPage(
-              //       postId: post.post.id,
-              //     ),
-              //   ),
-              // );
-            },
+            onTap: () => onSelected(post.post.id),
             child: Card(
               child: Stack(
                 alignment: Alignment.bottomLeft,
