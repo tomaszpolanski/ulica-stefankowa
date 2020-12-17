@@ -12,6 +12,7 @@ import 'package:ulicastefankowa/features/post/post_page.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
+import 'package:ulicastefankowa/shared/ui/debounce_widget.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
@@ -136,20 +137,9 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(
-        title: AppLocalizations.of(context).title,
-        useLightTheme:
-            BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
-        onThemeChanged: (bool light) {
-          final current = BlocProvider.of<SettingsBloc>(context).state;
-          BlocProvider.of<SettingsBloc>(context).save(
-            current.copyWith(
-              useLightTheme: light,
-            ),
-          );
-        },
-        textScaleFactor: BlocProvider.of<SettingsBloc>(context).state.textSize,
-        onTextScaleFactorChanged: (double size) {
+      drawer: DebounceWidget<double>(
+        value: BlocProvider.of<SettingsBloc>(context).state.textSize,
+        onChanged: (double size) {
           final current = BlocProvider.of<SettingsBloc>(context).state;
           BlocProvider.of<SettingsBloc>(context).save(
             current.copyWith(
@@ -157,6 +147,21 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           );
         },
+        builder: (context, value, onChanged) => MainDrawer(
+          title: AppLocalizations.of(context).title,
+          useLightTheme:
+              BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
+          onThemeChanged: (bool light) {
+            final current = BlocProvider.of<SettingsBloc>(context).state;
+            BlocProvider.of<SettingsBloc>(context).save(
+              current.copyWith(
+                useLightTheme: light,
+              ),
+            );
+          },
+          textScaleFactor: value,
+          onTextScaleFactorChanged: onChanged,
+        ),
       ),
       body: CustomScrollView(
         slivers: <Widget>[
