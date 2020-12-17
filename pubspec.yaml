@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^1.6.24
   equatable: ^2.0.0-nullsafety.0
   firebase_analytics: ^6.3.0
+  flutter_bloc: ^7.0.0-dev.2
 
 
 dev_dependencies:

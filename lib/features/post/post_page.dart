@@ -111,8 +111,9 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
                   ),
                 );
               } else {
-                return const SliverToBoxAdapter(
-                  child: CircularProgressIndicator(),
+                return const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator()),
                 );
               }
             },

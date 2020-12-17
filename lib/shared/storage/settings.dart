@@ -5,18 +5,30 @@ import 'dart:io';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart';
 
-class SettingsProvider {
-  Settings get initial => const Settings(
-        version: 1,
-        useLightTheme: true,
-        textSize: 20,
-      );
+const defaultSettings = Settings(
+  version: 1,
+  useLightTheme: true,
+  textSize: 20,
+);
+
+abstract class SettingsProvider {
+  Settings get initial;
+
+  Future<Settings> readSettings();
+
+  Future<void> saveSettings(Settings settings);
+}
+
+class SettingsProviderImpl implements SettingsProvider {
+  @override
+  Settings get initial => defaultSettings;
 
   Future<File> _getLocalFile() async {
     final String dir = (await getApplicationDocumentsDirectory()).path;
     return File('$dir/settings.json');
   }
 
+  @override
   Future<Settings> readSettings() async {
     try {
       final File file = await _getLocalFile();
@@ -28,6 +40,7 @@ class SettingsProvider {
     }
   }
 
+  @override
   Future<void> saveSettings(Settings settings) async {
     await (await _getLocalFile()).writeAsString(json.encode(settings.toJson()));
   }

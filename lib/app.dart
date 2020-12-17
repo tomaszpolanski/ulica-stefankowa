@@ -25,7 +25,9 @@ final ThemeData _kGalleryDarkTheme = ThemeData(
 );
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp(this.injector, {Key? key}) : super(key: key);
+
+  final Injector injector;
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -34,7 +36,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late Settings _settings;
 
-  final SettingsProvider settings = SettingsProvider();
+  final SettingsProvider settings = SettingsProviderImpl();
   final PublishSubject<Settings> _saveSettingsSubject = PublishSubject();
   late StreamSubscription<Settings> _saveSettingsSubscription;
 
@@ -66,7 +68,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       onGenerateTitle: (c) => AppLocalizations.of(c).title,
       navigatorObservers: <NavigatorObserver>[
-        ...?Injection.of(context)?.routeObservers,
+        ...widget.injector.routeObservers,
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
