@@ -51,9 +51,6 @@ class _MyAppState extends State<MyApp> {
           routerDelegate: AppRouterDelegate(widget.injector.routeObservers),
           routeInformationParser: AppRouteInformationParser(),
           backButtonDispatcher: RootBackButtonDispatcher(),
-          // navigatorObservers: <NavigatorObserver>[
-          //   ...widget.injector.routeObservers,
-          // ],
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
