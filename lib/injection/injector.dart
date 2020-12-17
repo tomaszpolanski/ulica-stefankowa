@@ -40,7 +40,10 @@ class Injection extends InheritedWidget implements Injector {
     required Widget child,
     Key? key,
   })  : _injector = injector,
-        super(child: child, key: key);
+        super(
+          child: child,
+          key: key,
+        );
 
   final Injector _injector;
 

@@ -21,6 +21,12 @@ class SettingsBloc extends Bloc<SettingsEvent, Settings> {
 
   final SettingsProvider provider;
 
+  void save(Settings settings) {
+    add(SaveSettings(settings));
+  }
+
+  void load() => add(const LoadSettings());
+
   @override
   Stream<Settings> mapEventToState(SettingsEvent event) async* {
     if (event is LoadSettings) {

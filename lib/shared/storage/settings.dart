@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:equatable/equatable.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart';
 
 const defaultSettings = Settings(
@@ -46,7 +48,7 @@ class SettingsProviderImpl implements SettingsProvider {
   }
 }
 
-class Settings {
+class Settings extends Equatable {
   const Settings({
     required this.version,
     required this.useLightTheme,
@@ -81,4 +83,10 @@ class Settings {
         'useLightTheme': useLightTheme,
         'textSize': textSize,
       };
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [version, useLightTheme, textSize];
 }

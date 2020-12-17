@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/injection/injector.dart';
+import 'package:ulicastefankowa/shared/storage/settings.dart';
+import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
@@ -12,18 +16,11 @@ class PostPage extends StatefulWidget {
     required this.postId,
     required this.title,
     required this.image,
-    required this.useLightTheme,
-    required this.onThemeChanged,
-    required this.textScale,
   }) : super(key: key);
 
   final String postId;
   final String title;
   final String image;
-  final bool useLightTheme;
-  final ValueChanged<bool> onThemeChanged;
-
-  final double textScale;
 
   @override
   _PostPageState createState() => _PostPageState();
@@ -48,9 +45,6 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final style = AppTextTheme.of(context).post.copyWith(
-          fontSize: widget.textScale,
-        );
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -61,9 +55,14 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
               style: AppTextTheme.of(context).s1,
             ),
             actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.visibility),
-                onPressed: () => widget.onThemeChanged(!widget.useLightTheme),
+              BlocBuilder<SettingsBloc, Settings>(
+                builder: (context, settings) => IconButton(
+                  icon: const Icon(Icons.visibility),
+                  onPressed: () {
+                    BlocProvider.of<SettingsBloc>(context).save(settings
+                        .copyWith(useLightTheme: !settings.useLightTheme));
+                  },
+                ),
               ),
             ],
           ),
@@ -82,33 +81,41 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
             builder: (context, snapshot) {
               final data = snapshot.data;
               if (data != null) {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, int index) {
-                      final paragraph = data.text[index];
-                      if (paragraph is TextParagraph) {
-                        return Align(
-                          child: SizedBox(
-                            width: 720,
-                            child: TextParagraphWidget(
-                              paragraph.spans
-                                  .map((span) => _getSpan(span, style: style))
-                                  .toList(growable: false),
-                            ),
-                          ),
+                return BlocBuilder<SettingsBloc, Settings>(
+                  builder: (context, settings) {
+                    final style = AppTextTheme.of(context).post.copyWith(
+                          fontSize: settings.textSize,
                         );
-                      } else if (paragraph is ImageParagraph) {
-                        return Align(
-                          child: SizedBox(
-                            width: 720,
-                            child: ImageParagraphWidget(paragraph.url),
-                          ),
-                        );
-                      }
-                      return null;
-                    },
-                    childCount: data.text.length,
-                  ),
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, int index) {
+                          final paragraph = data.text[index];
+                          if (paragraph is TextParagraph) {
+                            return Align(
+                              child: SizedBox(
+                                width: 720,
+                                child: TextParagraphWidget(
+                                  paragraph.spans
+                                      .map((span) =>
+                                          _getSpan(span, style: style))
+                                      .toList(growable: false),
+                                ),
+                              ),
+                            );
+                          } else if (paragraph is ImageParagraph) {
+                            return Align(
+                              child: SizedBox(
+                                width: 720,
+                                child: ImageParagraphWidget(paragraph.url),
+                              ),
+                            );
+                          }
+                          return null;
+                        },
+                        childCount: data.text.length,
+                      ),
+                    );
+                  },
                 );
               } else {
                 return const SliverFillRemaining(

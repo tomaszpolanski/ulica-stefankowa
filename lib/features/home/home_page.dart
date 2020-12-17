@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/features/post/post_page.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
+import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
@@ -97,9 +100,6 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
                           postId: post.post.id,
                           title: post.post.title,
                           image: post.post.imageUrl,
-                          useLightTheme: widget.useLightTheme,
-                          onThemeChanged: widget.onThemeChanged,
-                          textScale: widget.fontSize,
                         ),
                       ),
                     );
@@ -138,10 +138,25 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
       key: _scaffoldKey,
       drawer: MainDrawer(
         title: AppLocalizations.of(context).title,
-        useLightTheme: widget.useLightTheme,
-        onThemeChanged: widget.onThemeChanged,
-        textScaleFactor: widget.fontSize,
-        onTextScaleFactorChanged: widget.onFontSizeChanged,
+        useLightTheme:
+            BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
+        onThemeChanged: (bool light) {
+          final current = BlocProvider.of<SettingsBloc>(context).state;
+          BlocProvider.of<SettingsBloc>(context).save(
+            current.copyWith(
+              useLightTheme: light,
+            ),
+          );
+        },
+        textScaleFactor: BlocProvider.of<SettingsBloc>(context).state.textSize,
+        onTextScaleFactorChanged: (double size) {
+          final current = BlocProvider.of<SettingsBloc>(context).state;
+          BlocProvider.of<SettingsBloc>(context).save(
+            current.copyWith(
+              textSize: size,
+            ),
+          );
+        },
       ),
       body: CustomScrollView(
         slivers: <Widget>[
