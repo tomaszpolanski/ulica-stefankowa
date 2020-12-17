@@ -2,11 +2,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/security/environment.dart';
+import 'package:ulicastefankowa/shared/storage/settings.dart';
 
 abstract class Injector {
   Prismic get prismic;
 
   Env get environment;
+
+  SettingsProvider get settings;
 
   List<RouteObserver<PageRoute<dynamic>>> get routeObservers;
 }
@@ -15,6 +18,7 @@ class InjectorImpl implements Injector {
   InjectorImpl({
     required this.environment,
     required this.routeObservers,
+    required this.settings,
   }) : prismic = PrismicImpl(environment);
 
   @override
@@ -22,6 +26,9 @@ class InjectorImpl implements Injector {
 
   @override
   final Prismic prismic;
+
+  @override
+  final SettingsProvider settings;
 
   @override
   final List<RouteObserver<PageRoute<dynamic>>> routeObservers;
@@ -33,7 +40,10 @@ class Injection extends InheritedWidget implements Injector {
     required Widget child,
     Key? key,
   })  : _injector = injector,
-        super(child: child, key: key);
+        super(
+          child: child,
+          key: key,
+        );
 
   final Injector _injector;
 
@@ -52,4 +62,7 @@ class Injection extends InheritedWidget implements Injector {
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+
+  @override
+  SettingsProvider get settings => _injector.settings;
 }

@@ -44,7 +44,7 @@ class MainDrawer extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                AppLocalizations.of(context).postFontSize,
+                AppLocalizations.of(context)!.postFontSize,
                 textAlign: TextAlign.center,
                 style: AppTextTheme.of(context).post.copyWith(
                       fontSize: textScaleFactor,
@@ -62,14 +62,14 @@ class MainDrawer extends StatelessWidget {
           ),
           const Divider(),
           SwitchListTile(
-            title: Text(AppLocalizations.of(context).useLightTheme),
+            title: Text(AppLocalizations.of(context)!.useLightTheme),
             value: useLightTheme,
             onChanged: onThemeChanged,
           ),
           const Divider(),
           ListTile(
-            title: Text(AppLocalizations.of(context).aboutBlog),
-            onTap: () => Navigator.of(context)?.push(
+            title: Text(AppLocalizations.of(context)!.aboutBlog),
+            onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const AboutPage(),
               ),

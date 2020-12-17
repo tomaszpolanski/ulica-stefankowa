@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/features/post/post_page.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
+import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
+import 'package:ulicastefankowa/shared/ui/debounce_widget.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
@@ -90,16 +94,13 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context)?.push(
+                    Navigator.of(context).push(
                       FullSlideTransitionRoute<void>(
                         settings: const RouteSettings(),
                         builder: (_) => PostPage(
                           postId: post.post.id,
                           title: post.post.title,
                           image: post.post.imageUrl,
-                          useLightTheme: widget.useLightTheme,
-                          onThemeChanged: widget.onThemeChanged,
-                          textScale: widget.fontSize,
                         ),
                       ),
                     );
@@ -136,12 +137,31 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(
-        title: AppLocalizations.of(context).title,
-        useLightTheme: widget.useLightTheme,
-        onThemeChanged: widget.onThemeChanged,
-        textScaleFactor: widget.fontSize,
-        onTextScaleFactorChanged: widget.onFontSizeChanged,
+      drawer: DebounceWidget<double>(
+        value: BlocProvider.of<SettingsBloc>(context).state.textSize,
+        onChanged: (double size) {
+          final current = BlocProvider.of<SettingsBloc>(context).state;
+          BlocProvider.of<SettingsBloc>(context).save(
+            current.copyWith(
+              textSize: size,
+            ),
+          );
+        },
+        builder: (context, value, onChanged) => MainDrawer(
+          title: AppLocalizations.of(context)!.title,
+          useLightTheme:
+              BlocProvider.of<SettingsBloc>(context).state.useLightTheme,
+          onThemeChanged: (bool light) {
+            final current = BlocProvider.of<SettingsBloc>(context).state;
+            BlocProvider.of<SettingsBloc>(context).save(
+              current.copyWith(
+                useLightTheme: light,
+              ),
+            );
+          },
+          textScaleFactor: value,
+          onTextScaleFactorChanged: onChanged,
+        ),
       ),
       body: CustomScrollView(
         slivers: <Widget>[
@@ -154,7 +174,7 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             flexibleSpace: FlexibleSpaceBar(
               title: StefanText(
-                AppLocalizations.of(context).title,
+                AppLocalizations.of(context)!.title,
                 style: AppTextTheme.of(context).s1,
               ),
               background: Stack(
