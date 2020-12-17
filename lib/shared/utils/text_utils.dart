@@ -43,16 +43,22 @@ Color _forTheme(int i, String title, List<Color> colorList) {
 }
 
 class StefanText extends StatelessWidget {
-  const StefanText(this.data, {this.style, Key? key}) : super(key: key);
+  const StefanText(
+    this.data, {
+    this.style,
+    this.maxLines = 2,
+    Key? key,
+  }) : super(key: key);
 
   final String data;
   final TextStyle? style;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     return RichText(
-      maxLines: 2,
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: _getColoredTextSpans(

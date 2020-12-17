@@ -1,5 +1,5 @@
 name: ulicastefankowa
-description: The app/webpage for ulica stefankowa
+description: Adventures of Piglet Stefan
 
 environment:
   sdk: '>=2.12.0-29.10.beta <3.0.0'

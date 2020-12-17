@@ -3,6 +3,10 @@
     "@title": {
         "description": "Applications title"
     },
+    "titleMultiline": "UliCa\nSteFAnkOwA",
+    "@titleMultiline": {
+        "description": "Applications title in double line"
+    },
     "useLightTheme": "Use Light theme",
     "@useLightTheme": {
         "description": "Label to switch"

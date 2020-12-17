@@ -11,14 +11,11 @@ import 'package:url_launcher/url_launcher.dart';
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
     Key? key,
-    required this.title,
     required this.useLightTheme,
     required this.onThemeChanged,
     required this.textScaleFactor,
     required this.onTextScaleFactorChanged,
   }) : super(key: key);
-
-  final String title;
 
   final bool useLightTheme;
   final ValueChanged<bool> onThemeChanged;
@@ -35,7 +32,7 @@ class MainDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
             child: StefanText(
-              title,
+              AppLocalizations.of(context)!.titleMultiline,
               style: AppTextTheme.of(context).s1,
             ),
           ),
