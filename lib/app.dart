@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, settings) {
         return MaterialApp.router(
           onGenerateTitle: (c) => AppLocalizations.of(c)!.title,
-          routerDelegate: AppRouterDelegate(),
+          routerDelegate: AppRouterDelegate(widget.injector.routeObservers),
           routeInformationParser: AppRouteInformationParser(),
           backButtonDispatcher: RootBackButtonDispatcher(),
           // navigatorObservers: <NavigatorObserver>[

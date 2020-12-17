@@ -15,7 +15,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         // ignore: prefer_mixin
         ChangeNotifier,
         PopNavigatorRouterDelegateMixin<AppRoutePath> {
-  AppRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  AppRouterDelegate(this.observers)
+      : navigatorKey = GlobalKey<NavigatorState>();
+
+  final List<RouteObserver<PageRoute<dynamic>>> observers;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
@@ -32,31 +35,41 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
           key: navigatorKey,
           pages: [
             MaterialPage(
-              key: const ValueKey('main-page'),
+              key: const ValueKey(MainRoutePath()),
               child: HomePage(
                 prismic: Injection.of(context)!.prismic,
                 onPageChanged: (path) {
                   currentConfiguration = path;
+                  for (final o in observers) {
+                    o.didPush(
+                        TrackPageRoute(currentConfiguration.toString()), null);
+                  }
                   notifyListeners();
                 },
               ),
             ),
             if (configuration is UnknownRoutePath)
-              const MaterialPage(
-                key: ValueKey('not-found-page'),
-                child: NotFoundPage(),
+              MaterialPage(
+                key: ValueKey(configuration),
+                child: const NotFoundPage(),
               )
             else if (configuration is PostRoutePath)
               PostRouterPage(configuration.id)
             else if (configuration is AboutRoutePath)
               const MaterialPage(
-                key: ValueKey('about-page'),
+                key: ValueKey(AboutRoutePath()),
                 child: AboutPage(),
               )
           ],
           onPopPage: (route, result) {
             if (!route.didPop(result)) {
               return false;
+            }
+            for (final o in observers) {
+              o.didPop(
+                TrackPageRoute(const MainRoutePath().toString()),
+                TrackPageRoute(currentConfiguration.toString()),
+              );
             }
             currentConfiguration = const MainRoutePath();
             notifyListeners();
@@ -106,16 +119,7 @@ class AppRouteInformationParser extends RouteInformationParser<AppRoutePath> {
 
   @override
   RouteInformation restoreRouteInformation(AppRoutePath configuration) {
-    if (configuration is UnknownRoutePath) {
-      return const RouteInformation(location: '/404');
-    } else if (configuration is MainRoutePath) {
-      return const RouteInformation(location: '/');
-    } else if (configuration is PostRoutePath) {
-      return RouteInformation(location: '/post/${configuration.id}');
-    } else if (configuration is AboutRoutePath) {
-      return const RouteInformation(location: '/about');
-    }
-    return const RouteInformation(location: '/404');
+    return RouteInformation(location: configuration.toString());
   }
 }
 
@@ -123,18 +127,38 @@ abstract class AppRoutePath {}
 
 class MainRoutePath implements AppRoutePath {
   const MainRoutePath();
+
+  @override
+  String toString() => '/';
 }
 
 class AboutRoutePath implements AppRoutePath {
   const AboutRoutePath();
+
+  @override
+  String toString() => '/about';
 }
 
 class PostRoutePath implements AppRoutePath {
   const PostRoutePath(this.id);
 
   final String id;
+
+  @override
+  String toString() => '/post/$id';
 }
 
 class UnknownRoutePath implements AppRoutePath {
   const UnknownRoutePath();
+
+  @override
+  String toString() => '/404';
+}
+
+class TrackPageRoute extends MaterialPageRoute<void> {
+  TrackPageRoute(String name)
+      : super(
+          settings: RouteSettings(name: name),
+          builder: (_) => const SizedBox(),
+        );
 }
