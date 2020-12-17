@@ -69,7 +69,7 @@ class MainDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(AppLocalizations.of(context).aboutBlog),
-            onTap: () => Navigator.of(context)?.push(
+            onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const AboutPage(),
               ),

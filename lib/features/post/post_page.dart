@@ -71,7 +71,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
               padding: const EdgeInsets.only(bottom: 16),
               child: PhotoHero(
                 photo: widget.image,
-                onTap: () => Navigator.of(context)?.pop(),
+                onTap: () => Navigator.of(context).pop(),
               ),
             ),
           ),
