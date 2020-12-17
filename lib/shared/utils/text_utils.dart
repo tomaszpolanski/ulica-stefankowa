@@ -46,7 +46,7 @@ class StefanText extends StatelessWidget {
   const StefanText(
     this.data, {
     this.style,
-    this.maxLines = 2,
+    this.maxLines,
     Key? key,
   }) : super(key: key);
 

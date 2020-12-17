@@ -33,6 +33,7 @@ class MainDrawer extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
             child: StefanText(
               AppLocalizations.of(context)!.titleMultiline,
+              maxLines: 2,
               style: AppTextTheme.of(context).s1,
             ),
           ),

@@ -119,7 +119,6 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
                           padding: const EdgeInsets.all(16),
                           child: StefanText(
                             post.post.title,
-                            maxLines: null,
                             style: AppTextTheme.of(context).s1,
                           ),
                         ),
@@ -175,7 +174,6 @@ class _MyHomePageState extends State<HomePage> with TickerProviderStateMixin {
             flexibleSpace: FlexibleSpaceBar(
               title: StefanText(
                 AppLocalizations.of(context)!.title,
-                maxLines: null,
                 style: AppTextTheme.of(context).s1,
               ),
               background: Stack(
