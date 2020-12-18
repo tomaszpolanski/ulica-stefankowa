@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ulicastefankowa/features/post/paragraph.dart';
 import 'package:ulicastefankowa/features/post/post_details_bloc.dart';
-import 'package:ulicastefankowa/injection/injector.dart';
 import 'package:ulicastefankowa/shared/storage/settings.dart';
 import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
@@ -55,10 +54,12 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostDetailsBloc, PostDetailsState>(
-      future: Injection.of(context)!.prismic.fetchPostDetails(widget.postId),
-      builder: (context, snapshot) {
-        final data = snapshot.data;
+    return AppBlocBuilder<PostDetailsBloc, PostDetailsState>(
+      onInit: (context) {
+        BlocProvider.of<PostDetailsBloc>(context).fetch(widget.postId);
+      },
+      builder: (context, state) {
+        final data = state.data;
         if (data != null) {
           return Scaffold(
             body: CustomScrollView(
