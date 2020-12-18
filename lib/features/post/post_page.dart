@@ -6,6 +6,7 @@ import 'package:ulicastefankowa/features/post/post_details_bloc.dart';
 import 'package:ulicastefankowa/shared/storage/settings.dart';
 import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
+import 'package:ulicastefankowa/shared/ui/fade_in.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
@@ -54,92 +55,94 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AppBlocBuilder<PostDetailsBloc, PostDetailsState>(
-      onInit: (context) {
-        BlocProvider.of<PostDetailsBloc>(context).fetch(widget.postId);
-      },
-      builder: (context, state) {
-        final data = state.data;
-        if (data != null) {
-          return Scaffold(
-            body: CustomScrollView(
-              slivers: <Widget>[
-                SliverAppBar(
-                  floating: true,
-                  title: StefanText(
-                    data.title,
-                    style: AppTextTheme.of(context).s1,
-                  ),
-                  actions: <Widget>[
-                    BlocBuilder<SettingsBloc, Settings>(
-                      builder: (context, settings) => IconButton(
-                        icon: const Icon(Icons.visibility),
-                        onPressed: () {
-                          BlocProvider.of<SettingsBloc>(context).save(
-                            settings.copyWith(
-                              useLightTheme: !settings.useLightTheme,
-                            ),
-                          );
-                        },
+    return ColoredBox(
+      color: Colors.white,
+      child: AppBlocBuilder<PostDetailsBloc, PostDetailsState>(
+        onInit: (context) {
+          BlocProvider.of<PostDetailsBloc>(context).fetch(widget.postId);
+        },
+        builder: (context, state) {
+          final data = state.data;
+          if (data != null) {
+            return FadeInWidget(
+              child: Scaffold(
+                body: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      floating: true,
+                      title: StefanText(
+                        data.title,
+                        style: AppTextTheme.of(context).s1,
                       ),
+                      actions: <Widget>[
+                        BlocBuilder<SettingsBloc, Settings>(
+                          builder: (context, settings) => IconButton(
+                            icon: const Icon(Icons.visibility),
+                            onPressed: () {
+                              BlocProvider.of<SettingsBloc>(context).save(
+                                settings.copyWith(
+                                  useLightTheme: !settings.useLightTheme,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: PhotoHero(
+                          photo: data.imageUrl,
+                          onTap: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+                    ),
+                    BlocBuilder<SettingsBloc, Settings>(
+                      builder: (context, settings) {
+                        final style = AppTextTheme.of(context).post.copyWith(
+                              fontSize: settings.textSize,
+                            );
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, int index) {
+                              final paragraph = data.text[index];
+                              if (paragraph is TextParagraph) {
+                                return Align(
+                                  child: SizedBox(
+                                    width: 720,
+                                    child: TextParagraphWidget(
+                                      paragraph.spans
+                                          .map((span) =>
+                                              _getSpan(span, style: style))
+                                          .toList(growable: false),
+                                    ),
+                                  ),
+                                );
+                              } else if (paragraph is ImageParagraph) {
+                                return Align(
+                                  child: SizedBox(
+                                    width: 720,
+                                    child: ImageParagraphWidget(paragraph.url),
+                                  ),
+                                );
+                              }
+                              return null;
+                            },
+                            childCount: data.text.length,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: PhotoHero(
-                      photo: data.imageUrl,
-                      onTap: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ),
-                BlocBuilder<SettingsBloc, Settings>(
-                  builder: (context, settings) {
-                    final style = AppTextTheme.of(context).post.copyWith(
-                          fontSize: settings.textSize,
-                        );
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, int index) {
-                          final paragraph = data.text[index];
-                          if (paragraph is TextParagraph) {
-                            return Align(
-                              child: SizedBox(
-                                width: 720,
-                                child: TextParagraphWidget(
-                                  paragraph.spans
-                                      .map((span) =>
-                                          _getSpan(span, style: style))
-                                      .toList(growable: false),
-                                ),
-                              ),
-                            );
-                          } else if (paragraph is ImageParagraph) {
-                            return Align(
-                              child: SizedBox(
-                                width: 720,
-                                child: ImageParagraphWidget(paragraph.url),
-                              ),
-                            );
-                          }
-                          return null;
-                        },
-                        childCount: data.text.length,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Container(
-            color: Colors.white,
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
