@@ -32,6 +32,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _settingsInitialized = false;
+  late AppRouterDelegate routerDelegate;
+
+  @override
+  void initState() {
+    routerDelegate = AppRouterDelegate(widget.injector.routeObservers);
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -48,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, settings) {
         return MaterialApp.router(
           onGenerateTitle: (c) => AppLocalizations.of(c)!.title,
-          routerDelegate: AppRouterDelegate(widget.injector.routeObservers),
+          routerDelegate: routerDelegate,
           routeInformationParser: AppRouteInformationParser(),
           backButtonDispatcher: RootBackButtonDispatcher(),
           localizationsDelegates: const [

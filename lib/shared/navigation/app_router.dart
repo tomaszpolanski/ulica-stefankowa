@@ -1,14 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ulicastefankowa/features/about/about_page.dart';
 import 'package:ulicastefankowa/features/home/home_page.dart';
 import 'package:ulicastefankowa/features/not_found/not_found_page.dart';
 import 'package:ulicastefankowa/features/post/post_page.dart';
-import 'package:ulicastefankowa/injection/injector.dart';
-import 'package:ulicastefankowa/shared/storage/settings.dart';
-import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 
 class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     with
@@ -28,54 +23,51 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsBloc, Settings>(
-      builder: (context, settings) {
-        final configuration = currentConfiguration;
-        return Navigator(
-          key: navigatorKey,
-          pages: [
-            MaterialPage(
-              key: const ValueKey(MainRoutePath()),
-              child: HomePage(
-                prismic: Injection.of(context)!.prismic,
-                onPageChanged: (path) {
-                  currentConfiguration = path;
-                  for (final o in observers) {
-                    o.didPush(
-                        TrackPageRoute(currentConfiguration.toString()), null);
-                  }
-                  notifyListeners();
-                },
-              ),
-            ),
-            if (configuration is UnknownRoutePath)
-              MaterialPage(
-                key: ValueKey(configuration),
-                child: const NotFoundPage(),
-              )
-            else if (configuration is PostRoutePath)
-              PostRouterPage(configuration.id)
-            else if (configuration is AboutRoutePath)
-              const MaterialPage(
-                key: ValueKey(AboutRoutePath()),
-                child: AboutPage(),
-              )
-          ],
-          onPopPage: (route, result) {
-            if (!route.didPop(result)) {
-              return false;
-            }
-            for (final o in observers) {
-              o.didPop(
-                TrackPageRoute(const MainRoutePath().toString()),
-                TrackPageRoute(currentConfiguration.toString()),
-              );
-            }
-            currentConfiguration = const MainRoutePath();
-            notifyListeners();
-            return true;
-          },
-        );
+    final configuration = currentConfiguration;
+    return Navigator(
+      key: navigatorKey,
+      pages: [
+        MaterialPage(
+          key: const ValueKey(MainRoutePath()),
+          child: HomePage(
+            onPageChanged: (path) {
+              currentConfiguration = path;
+              for (final o in observers) {
+                o.didPush(
+                  TrackPageRoute(currentConfiguration.toString()),
+                  null,
+                );
+              }
+              notifyListeners();
+            },
+          ),
+        ),
+        if (configuration is UnknownRoutePath)
+          MaterialPage(
+            key: ValueKey(configuration),
+            child: const NotFoundPage(),
+          )
+        else if (configuration is PostRoutePath)
+          PostRouterPage(configuration.id)
+        else if (configuration is AboutRoutePath)
+          const MaterialPage(
+            key: ValueKey(AboutRoutePath()),
+            child: AboutPage(),
+          )
+      ],
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+        for (final o in observers) {
+          o.didPop(
+            TrackPageRoute(const MainRoutePath().toString()),
+            TrackPageRoute(currentConfiguration.toString()),
+          );
+        }
+        currentConfiguration = const MainRoutePath();
+        notifyListeners();
+        return true;
       },
     );
   }

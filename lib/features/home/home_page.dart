@@ -8,7 +8,6 @@ import 'package:ulicastefankowa/features/drawer/main_drawer.dart';
 import 'package:ulicastefankowa/features/home/home_bloc.dart';
 import 'package:ulicastefankowa/features/post/post.dart';
 import 'package:ulicastefankowa/shared/navigation/app_router.dart';
-import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/state/state.dart';
 import 'package:ulicastefankowa/shared/storage/settings_bloc.dart';
 import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
@@ -22,11 +21,9 @@ const double _kFlexibleSpaceMaxHeight = 230;
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
-    required this.prismic,
     required this.onPageChanged,
   }) : super(key: key);
 
-  final Prismic prismic;
   final ValueChanged<AppRoutePath> onPageChanged;
 
   @override
