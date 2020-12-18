@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -35,50 +33,9 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class PostCard {
-  PostCard({
-    required this.post,
-    required this.animationController,
-  });
-
-  final BasicPost post;
-  final AnimationController animationController;
-}
-
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
-
-  var _posts = <PostCard>[];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetch();
-  }
-
-  @override
-  void dispose() {
-    _posts.map((e) => e.animationController).forEach((it) => it.dispose());
-    super.dispose();
-  }
-
-  Future<void> _fetch() async {
-    final posts = await widget.prismic.fetchPosts();
-    if (mounted) {
-      setState(() {
-        _posts = posts.map(_postCard).toList();
-      });
-    }
-  }
-
-  PostCard _postCard(BasicPost post) {
-    final animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    )..forward();
-    return PostCard(post: post, animationController: animationController);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +110,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           widget.onPageChanged(PostRoutePath(id));
                         },
                       ),
-                      childCount: _posts.length,
+                      childCount: data.length,
                     ),
                   ),
                 );
@@ -211,28 +168,4 @@ class PostCardItem extends StatelessWidget {
       ),
     );
   }
-}
-
-class FullSlideTransitionRoute<T> extends MaterialPageRoute<T> {
-  FullSlideTransitionRoute(
-      {required WidgetBuilder builder, RouteSettings? settings})
-      : super(builder: builder, settings: settings);
-
-  final Tween<Offset> _kBottomUpTween = Tween<Offset>(
-    begin: const Offset(0, 1),
-    end: Offset.zero,
-  );
-
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation, Widget child) =>
-      SlideTransition(
-        position: _kBottomUpTween.animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-          ),
-        ),
-        child: child,
-      );
 }
