@@ -56,7 +56,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: Colors.white,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: AppBlocBuilder<PostDetailsBloc, PostDetailsState>(
         onInit: (context) {
           BlocProvider.of<PostDetailsBloc>(context).fetch(widget.postId);
@@ -92,10 +92,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 16),
-                        child: PhotoHero(
-                          photo: data.imageUrl,
-                          onTap: () => Navigator.of(context).pop(),
-                        ),
+                        child: PhotoHero(photo: data.imageUrl),
                       ),
                     ),
                     BlocBuilder<SettingsBloc, Settings>(
