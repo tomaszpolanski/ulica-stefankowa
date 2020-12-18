@@ -90,18 +90,21 @@ class AppRouteInformationParser extends RouteInformationParser<AppRoutePath> {
         return const MainRoutePath();
       }
 
-      if (uri.pathSegments.length == 2) {
+      if (uri.pathSegments.length == 1) {
         final segment = uri.pathSegments[0];
         if (segment == 'about') {
           return const AboutRoutePath();
-        } else if (segment == 'post') {
+        }
+      }
+
+      if (uri.pathSegments.length == 2) {
+        final segment = uri.pathSegments[0];
+        if (segment == 'post') {
           final remaining = uri.pathSegments[1];
           // ignore: unnecessary_null_comparison
           return remaining != null
               ? PostRoutePath(remaining)
               : const UnknownRoutePath();
-        } else {
-          return const UnknownRoutePath();
         }
       }
     }
