@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:equatable/equatable.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const defaultSettings = Settings(
   version: 1,
@@ -25,26 +24,23 @@ class SettingsProviderImpl implements SettingsProvider {
   @override
   Settings get initial => defaultSettings;
 
-  Future<File> _getLocalFile() async {
-    final String dir = (await getApplicationDocumentsDirectory()).path;
-    return File('$dir/settings.json');
-  }
-
   @override
   Future<Settings> readSettings() async {
     try {
-      final File file = await _getLocalFile();
-      final String contents = await file.readAsString();
-      final Map<String, dynamic> settings = json.decode(contents);
-      return Settings.fromJson(settings);
-    } on FileSystemException {
-      return initial;
-    }
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('settings')) {
+        final contents = prefs.getString('settings');
+        final Map<String, dynamic> settings = json.decode(contents);
+        return Settings.fromJson(settings);
+      }
+    } catch (_) {}
+    return initial;
   }
 
   @override
   Future<void> saveSettings(Settings settings) async {
-    await (await _getLocalFile()).writeAsString(json.encode(settings.toJson()));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('settings', json.encode(settings.toJson()));
   }
 }
 

@@ -14,7 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final injector = InjectorImpl(
     environment: EnvImpl(),
-    settings: _FakeSettingsProvider(),
+    settings: SettingsProviderImpl(),
     analytics: FirebaseAnalytics(),
   );
   runApp(
@@ -23,15 +23,4 @@ Future<void> main() async {
       child: BlockInjection(injector, child: MyApp(injector)),
     ),
   );
-}
-
-class _FakeSettingsProvider implements SettingsProvider {
-  @override
-  Settings get initial => defaultSettings;
-
-  @override
-  Future<Settings> readSettings() async => defaultSettings;
-
-  @override
-  Future<void> saveSettings(Settings settings) async {}
 }
