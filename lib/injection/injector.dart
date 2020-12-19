@@ -1,4 +1,5 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ulicastefankowa/shared/network/prismic.dart';
 import 'package:ulicastefankowa/shared/security/environment.dart';
@@ -11,13 +12,13 @@ abstract class Injector {
 
   SettingsProvider get settings;
 
-  List<RouteObserver<PageRoute<dynamic>>> get routeObservers;
+  FirebaseAnalytics? get analytics;
 }
 
 class InjectorImpl implements Injector {
   InjectorImpl({
     required this.environment,
-    required this.routeObservers,
+    required this.analytics,
     required this.settings,
   }) : prismic = PrismicImpl(environment);
 
@@ -31,7 +32,7 @@ class InjectorImpl implements Injector {
   final SettingsProvider settings;
 
   @override
-  final List<RouteObserver<PageRoute<dynamic>>> routeObservers;
+  final FirebaseAnalytics? analytics;
 }
 
 class Injection extends InheritedWidget implements Injector {
@@ -57,8 +58,7 @@ class Injection extends InheritedWidget implements Injector {
   Prismic get prismic => _injector.prismic;
 
   @override
-  List<RouteObserver<PageRoute<dynamic>>> get routeObservers =>
-      _injector.routeObservers;
+  FirebaseAnalytics? get analytics => _injector.analytics;
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ulicastefankowa/features/about/about_page.dart';
@@ -10,10 +11,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         // ignore: prefer_mixin
         ChangeNotifier,
         PopNavigatorRouterDelegateMixin<AppRoutePath> {
-  AppRouterDelegate(this.observers)
+  AppRouterDelegate({this.analytics})
       : navigatorKey = GlobalKey<NavigatorState>();
 
-  final List<RouteObserver<PageRoute<dynamic>>> observers;
+  final FirebaseAnalytics? analytics;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
@@ -32,12 +33,9 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
           child: HomePage(
             onPageChanged: (path) {
               currentConfiguration = path;
-              for (final o in observers) {
-                o.didPush(
-                  TrackPageRoute(currentConfiguration.toString()),
-                  null,
-                );
-              }
+              analytics?.setCurrentScreen(
+                screenName: currentConfiguration.toString(),
+              );
               notifyListeners();
             },
           ),
@@ -59,13 +57,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         if (!route.didPop(result)) {
           return false;
         }
-        for (final o in observers) {
-          o.didPop(
-            TrackPageRoute(const MainRoutePath().toString()),
-            TrackPageRoute(currentConfiguration.toString()),
-          );
-        }
         currentConfiguration = const MainRoutePath();
+        analytics?.setCurrentScreen(
+          screenName: currentConfiguration.toString(),
+        );
         notifyListeners();
         return true;
       },

@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    routerDelegate = AppRouterDelegate(widget.injector.routeObservers);
+    routerDelegate = AppRouterDelegate(analytics: widget.injector.analytics);
     super.initState();
   }
 
