@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ulicastefankowa/shared/ui/themed_image.dart';
 
 class PhotoHero extends StatelessWidget {
   const PhotoHero({
@@ -17,10 +18,12 @@ class PhotoHero extends StatelessWidget {
     const enable = !kIsWeb;
     final child = GestureDetector(
       onTap: onTap,
-      child: FadeInImage.assetNetwork(
-        image: photo,
-        placeholder: 'images/header.jpg',
-        fit: BoxFit.contain,
+      child: ThemedImage(
+        child: FadeInImage.assetNetwork(
+          image: photo,
+          placeholder: 'images/header.jpg',
+          fit: BoxFit.contain,
+        ),
       ),
     );
     return enable

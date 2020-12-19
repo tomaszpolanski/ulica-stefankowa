@@ -62,13 +62,19 @@ class MainDrawer extends StatelessWidget {
           ),
           const Divider(),
           SwitchListTile(
-            title: Text(AppLocalizations.of(context)!.useLightTheme),
+            title: Text(
+              AppLocalizations.of(context)!.useLightTheme,
+              style: AppTextTheme.of(context).paragraph,
+            ),
             value: useLightTheme,
             onChanged: onThemeChanged,
           ),
           const Divider(),
           ListTile(
-            title: Text(AppLocalizations.of(context)!.aboutBlog),
+            title: Text(
+              AppLocalizations.of(context)!.aboutBlog,
+              style: AppTextTheme.of(context).paragraph,
+            ),
             onTap: () {
               onPageChanged(const AboutRoutePath());
             },
