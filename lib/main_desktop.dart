@@ -9,7 +9,7 @@ import 'package:ulicastefankowa/shared/storage/settings.dart';
 Future<void> main() async {
   final injector = InjectorImpl(
     environment: EnvImpl(),
-    routeObservers: [],
+    analytics: null,
     settings: SettingsProviderImpl(),
   );
   runApp(
