@@ -14,6 +14,7 @@ import 'package:ulicastefankowa/shared/theme/app_text_theme.dart';
 import 'package:ulicastefankowa/shared/ui/debounce_widget.dart';
 import 'package:ulicastefankowa/shared/ui/fade_in.dart';
 import 'package:ulicastefankowa/shared/ui/photo_hero.dart';
+import 'package:ulicastefankowa/shared/ui/themed_image.dart';
 import 'package:ulicastefankowa/shared/utils/text_utils.dart';
 
 const double _kFlexibleSpaceMaxHeight = 230;
@@ -79,13 +80,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  Image.asset(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? 'images/header-dark.png' // I know it is a horror picture. Header needs to have removed background.
-                        : 'images/header.jpg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                    height: _kFlexibleSpaceMaxHeight,
+                  ThemedImage(
+                    child: Image.asset(
+                      'images/header.jpg',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      height: _kFlexibleSpaceMaxHeight,
+                    ),
                   ),
                 ],
               ),
