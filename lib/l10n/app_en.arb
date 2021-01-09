@@ -15,11 +15,11 @@
     "@slowAnimations": {
         "description": "Label to slow down animations"
     },
-    "appVersion": "2017 Beta",
+    "appVersion": "2021.1",
     "@appVersion": {
         "description": "Apps version"
     },
-    "appCopy": "© 2017 Tomek & Paweł Polańscy",
+    "appCopy": "© 2021 Tomek & Paweł Polańscy",
     "@appCopy": {
         "description": "Authors"
     },
