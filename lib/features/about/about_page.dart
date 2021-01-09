@@ -43,10 +43,6 @@ class AboutPage extends StatelessWidget {
                             fontStyle: FontStyle.italic),
                         text: AppLocalizations.of(context)!.aboutText,
                       ),
-                      TextSpan(
-                        style: aboutTextStyle,
-                        text: '❤',
-                      ),
                     ],
                   ),
                 ),
