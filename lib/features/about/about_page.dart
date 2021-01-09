@@ -58,7 +58,7 @@ class AboutPage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () async {
                         const link = 'mailto:$email';
-                        await launch(link);
+                        await launch(link, forceSafariVC: false);
                       },
                       child: Column(
                         children: <Widget>[
@@ -120,31 +120,20 @@ class _AboutButton extends StatelessWidget {
           ),
           applicationLegalese: AppLocalizations.of(context)!.appCopy,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      style: aboutTextStyle,
-                      text: AppLocalizations.of(context)!.appDescription,
-                    ),
-                    LinkTextSpan(
-                      style: linkStyle,
-                      url: 'http://ulicastefankowa.pl',
-                    ),
-                    TextSpan(
-                      style: aboutTextStyle,
-                      text: AppLocalizations.of(context)!.appSourceCode,
-                    ),
-                    LinkTextSpan(
-                      style: linkStyle,
-                      url: 'https://goo.gl/cYD8Dq',
-                      text: AppLocalizations.of(context)!.appRepoLink,
-                    ),
-                    TextSpan(style: aboutTextStyle, text: '.'),
-                  ],
-                ),
+            RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    style: aboutTextStyle,
+                    text: AppLocalizations.of(context)!.appSourceCode,
+                  ),
+                  LinkTextSpan(
+                    style: linkStyle,
+                    url: 'https://goo.gl/cYD8Dq',
+                    text: AppLocalizations.of(context)!.appRepoLink,
+                  ),
+                  TextSpan(style: aboutTextStyle, text: '.'),
+                ],
               ),
             ),
           ],
