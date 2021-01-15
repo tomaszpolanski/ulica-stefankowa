@@ -68,14 +68,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           SliverAppBar(
             pinned: true,
             expandedHeight: _kFlexibleSpaceMaxHeight,
+            collapsedHeight: 60,
             leading: IconButton(
+              iconSize: 45,
               onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-              icon: Icon(Icons.menu, color: Theme.of(context).accentColor),
+              icon: Icon(
+                Icons.menu,
+                color: Theme.of(context).accentColor,
+              ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: StefanText(
-                AppLocalizations.of(context)!.title,
-                style: AppTextTheme.of(context).s1,
+              title: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: StefanText(
+                  AppLocalizations.of(context)!.title,
+                  style: AppTextTheme.of(context).s1,
+                ),
               ),
               background: Stack(
                 fit: StackFit.expand,
