@@ -39,7 +39,7 @@
     "@postFontSize": {
         "description": "Font size for the stories"
     },
-    "aboutText": "My Dear Readers,\n\nthe idea of a blog, on which I will place next adventures of Piglet Stefan, and in time also pranks and mischiefs of other fairy-tale heroes, came up from my passion to describe the world as I see it, and maybe as if I wanted to see it...\n\nSince you - young readers - are particularly demanding, I would like to create and give your opinions - I hope - to get to know you.\n\nI invite you to read the fairy tales, beautifully illustrated by Paula Dudek (www.behance.net/paula_dudek).\n\nIn order not to miss any details of the piglet's life, I suggest reading the stories from the first one.",
+    "aboutText": "My Dear Readers,\n\nthe idea of a blog, on which I will place next adventures of Piglet Stefan, and in time also pranks and mischiefs of other fairy-tale heroes, came up from my passion to describe the world as I see it, and maybe as if I wanted to see it...\n\nSince you - young readers - are particularly demanding, I would like to create and give your opinions - I hope - to get to know you.\n\nI invite you to read the fairy tales, designed by Valeria Calpanchay, beautifully illustrated by Paula Dudek (www.behance.net/paula_dudek).\n\nIn order not to miss any details of the piglet's life, I suggest reading the stories from the first one.",
     "@aboutText": {
         "description": "About the app"
     },
