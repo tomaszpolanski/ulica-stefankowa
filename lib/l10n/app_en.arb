@@ -27,7 +27,7 @@
     "@appDescription": {
         "description": "About description"
     },
-    "appSourceCode": ".\n\nTo see the source code for this app, please visit the ",
+    "appSourceCode": "\nTo see the source code for this app, please visit the ",
     "@appSourceCode": {
         "description": "Description part 1"
     },
