@@ -107,7 +107,7 @@ class _PostPageState extends State<PostPage> with TickerProviderStateMixin {
                               if (paragraph is TextParagraph) {
                                 return Align(
                                   child: SizedBox(
-                                    width: 720,
+                                    width: 1200,
                                     child: TextParagraphWidget(
                                       paragraph.spans
                                           .map((span) =>
